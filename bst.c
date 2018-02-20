@@ -36,21 +36,39 @@ void    freeBSTNODE(BSTNODE *n,void (*free)(void *))
 struct bst
 {
         BSTNODE * root;
+        int size;
         void (*display)(void *, FILE *);
         int (*compare)(void *, void *);
-        
+        void (*swapper)(BSTNODE*, BSTNODE*);
+        void (*free)(void *);
+};
+
+BST *newBST( void (*display)(void *,FILE *),int (*compare)(void *,void *), void (*swapper)(BSTNODE *,BSTNODE *), void (*free)(void *))
+{
+    BST bst = malloc(sizeof(BST));
+    bst->root = NULL;
+    bst->size =0;
+    bst->display = display;
+    bst->swapper = swapper;
+    bst->compare = compare;
+    bst->free = free;
+    return bst;
+}
+    
+BSTNODE *getBSTroot(BST *t){return t->root;}
+void    setBSTroot(BST *t,BSTNODE *replacement){ t->root = replacement; }
+void    setBSTsize(BST *t,int s) {t->size = s; }
+
+BSTNODE *insertBST(BST *t,void *value)
+{
+    
 }
 
-    extern BST *newBST(
-        void (*)(void *,FILE *),           //display
-        int (*)(void *,void *),            //comparator
-        void (*)(BSTNODE *,BSTNODE *),     //swapper
-        void (*)(void *));                 //free
-    extern BSTNODE *getBSTroot(BST *t);
-    extern void    setBSTroot(BST *t,BSTNODE *replacement);
-    extern void    setBSTsize(BST *t,int s);
-    extern BSTNODE *insertBST(BST *t,void *value);
-    extern BSTNODE *findBST(BST *t,void *value);
+BSTNODE *insertBSTrecurse(BSTNODE *root, void *value)
+{
+        if(getBSTNODEleft(root) != NULL
+}
+ extern BSTNODE *findBST(BST *t,void *value);
     extern BSTNODE *deleteBST(BST *t,void *value);
     extern BSTNODE *swapToLeafBST(BST *t,BSTNODE *node);
     extern void    pruneLeafBST(BST *t,BSTNODE *leaf);
