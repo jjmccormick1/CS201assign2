@@ -64,9 +64,11 @@ BSTNODE *insertBST(BST *t,void *value)
     
 }
 
-BSTNODE *insertBSTrecurse(BSTNODE *root, void *value)
+BSTNODE *insertBSTrecurse(BST* t,BSTNODE *node, void *value)
 {
-        if(getBSTNODEleft(root) != NULL
+        if(t->comapre(getBSTNODEvalue(node), value) < 0 && getBSTNODEleft(root) != NULL)
+                insertBSTrecurse(t,getBSTNODEleft(node),value);
+        
 }
  extern BSTNODE *findBST(BST *t,void *value);
     extern BSTNODE *deleteBST(BST *t,void *value);
