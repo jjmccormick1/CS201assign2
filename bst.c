@@ -61,17 +61,53 @@ void    setBSTsize(BST *t,int s) {t->size = s; }
 
 BSTNODE *insertBST(BST *t,void *value)
 {
-    
+    BSTNODE * newNode = newBSTNODE(value); //create new bstnode
+    return insertBSTrecurse(t,t->root,newNode,value); //call recursice helper
 }
 
-BSTNODE *insertBSTrecurse(BST* t,BSTNODE *node, void *value)
+BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
 {
-        if(t->comapre(getBSTNODEvalue(node), value) < 0 && getBSTNODEleft(root) != NULL)
-                insertBSTrecurse(t,getBSTNODEleft(node),value);
+    
+    int cmp = t->compare(getBSTNODEvalue(node), value);
+    
+        if(cmp <= 0 && getBSTNODEleft(root) == NULL)// if its less and the spot is empty
+        {
+            setBSTNODEleft(root, newNode);
+            setBSTNODEparent(newNode, root);
+            return newNode;
+        }
+        if(cmp > 0 && getBSTNODEright(root) == NULL) //if its more and the sport is empty
+        {
+            setBSTNODEright(root, newNode);
+            setBSTNODEparent(newNode, root);
+            return newNode;
+        }
+        if(cmp <= 0 && getBSTNODEleft(root) != NULL) //recure if spot isnt empty
+                insertBSTrecurse(t,getBSTNODEleft(root),newNode, value);
+        if(cmp > 0 && getBSTNODEright(root) != NULL) //recurse if not empty
+                insertBSTrecurse(t,getBSTNODEright(root),newNode, value);
         
 }
- extern BSTNODE *findBST(BST *t,void *value);
-    extern BSTNODE *deleteBST(BST *t,void *value);
+
+BSTNODE *findBST(BST *t,void *value)
+{
+    return findBSTrecurse(t, t->root, value);
+}
+
+BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
+{
+    int cmp = t->compare(getBSTNODEvalue(node), value);
+    if(node == NULL)
+        return NULL;
+    if(cmp ==0)
+        return node;
+    if(cmp <= 0)
+        findBSTrecurse(t, getBSTNODEleft(node), value);
+    if(cmp > 0)
+        findBSTrecurse(t, getBSTNODEright(node), value);
+}
+
+BSTNODE *deleteBST(BST *t,void *value);
     extern BSTNODE *swapToLeafBST(BST *t,BSTNODE *node);
     extern void    pruneLeafBST(BST *t,BSTNODE *leaf);
     extern int     sizeBST(BST *t);
