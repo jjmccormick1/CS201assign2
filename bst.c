@@ -25,6 +25,7 @@ BSTNODE *newBSTNODE(void *v)
         node->parent = NULL;
         node->left = NULL;
         node->right = NULL;
+        return node;
 }
 
 void    *getBSTNODEvalue(BSTNODE *n){ return n->value; }

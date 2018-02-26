@@ -6,3 +6,6 @@ bst.o:
 	$(CC) $(CFLAGS)  bst.c bst.h
 bst: bst.o
 	$(CC) $(LFLAGS)  bst.o bsttest.c -o bsttest
+clean:
+	rm -rf *.o
+	rm -rf *.gch
