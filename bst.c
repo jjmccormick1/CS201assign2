@@ -1,3 +1,14 @@
+//Jeremy McCormick
+// bst.c
+#include "bst.h"
+#include <stdlib.h>
+
+
+int minHeightBST(BSTNODE *node);
+int maxHeightBST(BSTNODE *node);
+void preorder(BST *t, BSTNODE * node, FILE * fp);
+BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value);
+BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value);
 
 struct bstnode
 {
@@ -7,7 +18,7 @@ struct bstnode
     BSTNODE * right;
 };
 
-BSTNODE *newBSTNODE(void *v)[
+BSTNODE *newBSTNODE(void *v)
 {
         BSTNODE * node = malloc(sizeof(BSTNODE));
         node->value = v;
@@ -17,7 +28,7 @@ BSTNODE *newBSTNODE(void *v)[
 }
 
 void    *getBSTNODEvalue(BSTNODE *n){ return n->value; }
-void    setBSTNODEvalue(BSTNODE *n,void *value) { n->value = value;
+void    setBSTNODEvalue(BSTNODE *n,void *value) { n->value = value; }
 BSTNODE *getBSTNODEleft(BSTNODE *n) { return n->left; }
 void    setBSTNODEleft(BSTNODE *n,BSTNODE *replacement) { n->left = replacement; }
 BSTNODE *getBSTNODEright(BSTNODE *n) {return n->right; }
@@ -45,7 +56,7 @@ struct bst
 
 BST *newBST( void (*display)(void *,FILE *),int (*compare)(void *,void *), void (*swapper)(BSTNODE *,BSTNODE *), void (*free)(void *))
 {
-    BST bst = malloc(sizeof(BST));
+    BST * bst = malloc(sizeof(BST));
     bst->root = NULL;
     bst->size =0;
     bst->display = display;
@@ -62,13 +73,14 @@ void    setBSTsize(BST *t,int s) {t->size = s; }
 BSTNODE *insertBST(BST *t,void *value)
 {
     BSTNODE * newNode = newBSTNODE(value); //create new bstnode
-    return insertBSTrecurse(t,t->root,newNode,value); //call recursice helper
+    t->size += 1;  //incerment size 
+    return insertBSTrecurse(t,t->root,newNode,value); //call recursive helper
 }
 
 BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
 {
     
-    int cmp = t->compare(getBSTNODEvalue(node), value);
+    int cmp = t->compare(getBSTNODEvalue(root), value);
     
         if(cmp <= 0 && getBSTNODEleft(root) == NULL)// if its less and the spot is empty
         {
@@ -86,6 +98,7 @@ BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
                 insertBSTrecurse(t,getBSTNODEleft(root),newNode, value);
         if(cmp > 0 && getBSTNODEright(root) != NULL) //recurse if not empty
                 insertBSTrecurse(t,getBSTNODEright(root),newNode, value);
+        return NULL;
         
 }
 
@@ -105,14 +118,119 @@ BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
         findBSTrecurse(t, getBSTNODEleft(node), value);
     if(cmp > 0)
         findBSTrecurse(t, getBSTNODEright(node), value);
+    
+    return NULL;
 }
 
-BSTNODE *deleteBST(BST *t,void *value);
-    extern BSTNODE *swapToLeafBST(BST *t,BSTNODE *node);
-    extern void    pruneLeafBST(BST *t,BSTNODE *leaf);
-    extern int     sizeBST(BST *t);
-    extern void    statisticsBST(BST *t,FILE *fp);
-    extern void    displayBST(BST *t,FILE *fp);
-    extern void    displayBSTdebug(BST *t,FILE *fp);
-    extern void    freeBST(BST *t);
-    #endif 
+BSTNODE *deleteBST(BST *t,void *value)
+{
+    BSTNODE * delNode = findBST(t,value);
+    if(delNode == NULL)
+        return NULL;
+    
+    BSTNODE * leaf = swapToLeafBST(t,delNode);
+    pruneLeafBST(t,leaf);
+    t->size -= 1; //decrement size
+    return leaf;
+}
+
+BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)
+{
+    if(node == NULL)
+        return NULL;
+    
+    if(getBSTNODEleft(node) == NULL && getBSTNODEright(node) == NULL) // make sure its not already a leaf
+        return node;
+    
+    BSTNODE * step;
+    
+    if(getBSTNODEright(node) != NULL)
+    {
+        step = getBSTNODEright(node); //Go left once
+    
+        while(step != NULL)
+        {
+            step = getBSTNODEleft(step); // Then go all the way right
+        }
+    }
+    else
+    {
+       step = getBSTNODEleft(node); //Go left once
+    
+        while(step != NULL)
+        {
+            step = getBSTNODEright(step); // Then go all the way right
+        }
+    }
+    t->swapper(node, step); //Swap the nodees
+    return step;
+}
+
+void    pruneLeafBST(BST *t,BSTNODE *leaf)
+{
+    BSTNODE * parent = getBSTNODEparent(leaf);
+    sizeBST(t); //Stops error complain of unused var
+    if(getBSTNODEleft(parent) == leaf)
+    {
+        setBSTNODEleft(parent, NULL);
+    }
+    else
+    {
+        setBSTNODEright(parent,NULL);
+    }
+    setBSTNODEparent(leaf,NULL);
+}
+
+int     sizeBST(BST *t)
+{
+    return t->size;
+}
+
+void    statisticsBST(BST *t,FILE *fp)
+{
+    fprintf(fp, "Nodes: %d",sizeBST(t));
+    fprintf(fp, "Minimum Depth: %d",minHeightBST(t->root));
+    fprintf(fp, "Maximum Depth: %d",maxHeightBST(t->root));
+}
+
+int maxHeightBST(BSTNODE *node)
+{
+  if (!node) return 0;
+  int lefth = maxHeightBST(node->left);
+  int righth = maxHeightBST(node->right);
+  return (lefth > righth) ? lefth + 1 : righth + 1;
+}
+int minHeightBST(BSTNODE *node)
+{
+  if (!node) return 0;
+  int lefth = maxHeightBST(node->left);
+  int righth = maxHeightBST(node->right);
+  return (lefth < righth) ? lefth + 1 : righth + 1;
+}
+
+void    displayBST(BST *t,FILE *fp)
+{
+    preorder(t,t->root,fp);
+}
+void preorder(BST *t, BSTNODE * node, FILE * fp)
+{
+    fprintf(fp,"[");
+        if(node == NULL)
+        {
+            fprintf(fp,"]");
+            return;
+        }
+        t->display(getBSTNODEvalue(node), fp);
+        preorder(t, getBSTNODEleft(node), fp);
+        preorder(t, getBSTNODEright(node), fp);
+}
+
+void    displayBSTdebug(BST *t,FILE *fp)
+{
+      t->display(getBSTNODEvalue(t->root), fp);
+}
+
+void    freeBST(BST *t)
+{
+    free(t);
+}
