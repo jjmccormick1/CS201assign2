@@ -1,14 +1,16 @@
 //Jeremy McCormick
 // bst.c
 #include "bst.h"
+#include "queue.h"
 #include <stdlib.h>
-
+#include <stdio.h>
 
 int minHeightBST(BSTNODE *node);
 int maxHeightBST(BSTNODE *node);
 void preorder(BST *t, BSTNODE * node, FILE * fp);
 BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value);
 BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value);
+void freeRecurse(BST * t,BSTNODE * node);
 
 struct bstnode
 {
@@ -95,9 +97,9 @@ BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
             setBSTNODEparent(newNode, root);
             return newNode;
         }
-        if(cmp <= 0 && getBSTNODEleft(root) != NULL) //recure if spot isnt empty
+        if(cmp <= 0 & getBSTNODEleft(root) != NULL) //recure if spot isnt empty
                 insertBSTrecurse(t,getBSTNODEleft(root),newNode, value);
-        if(cmp > 0 && getBSTNODEright(root) != NULL) //recurse if not empty
+        if(cmp > 0 & getBSTNODEright(root) != NULL) //recurse if not empty
                 insertBSTrecurse(t,getBSTNODEright(root),newNode, value);
         return NULL;
         
@@ -228,10 +230,41 @@ void preorder(BST *t, BSTNODE * node, FILE * fp)
 
 void    displayBSTdebug(BST *t,FILE *fp)
 {
-      t->display(getBSTNODEvalue(t->root), fp);
+    QUEUE * queue = newQUEUE(t->display, t->free);
+    enqueue(queue,t->root); //put root into queue to start things off
+    
+    while(sizeQUEUE(queue) > 0)
+    {
+        int level = sizeQUEUE(queue); //get queue size for newline
+        while(level > 0)
+        {
+            BSTNODE * node = (BSTNODE*)dequeue(queue);
+            t->display(getBSTNODEvalue(t->root), fp);
+            
+            if(level > 1)
+                fprintf(fp, " ");
+            if(getBSTNODEleft(node) != NULL)
+                enqueue(queue, getBSTNODEleft(node) ); //add left into queue
+            if(getBSTNODEright(node) != NULL)
+                enqueue(queue, getBSTNODEright(node) ); //add right into queue
+            level--;
+        }
+        fprintf(fp,"\n");
+    }
 }
 
 void    freeBST(BST *t)
 {
+    freeRecurse(t, t->root);
     free(t);
+}
+
+void freeRecurse(BST *t,BSTNODE * node)
+{
+    if(getBSTNODEleft(node) != NULL)
+        freeRecurse(t, getBSTNODEleft(node));
+    if(getBSTNODEright(node) != NULL)
+        freeRecurse(t, getBSTNODEright(node));
+    
+    freeBSTNODE(node, t->free);
 }
