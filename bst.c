@@ -76,6 +76,12 @@ void    setBSTsize(BST *t,int s) {t->size = s; }
 BSTNODE *insertBST(BST *t,void *value)
 {
     BSTNODE * newNode = newBSTNODE(value); //create new bstnode
+    if(t->size == 0)
+    {
+        t->root = newNode;
+        t->size = 1;
+        return t->root;
+    }
     t->size += 1;  //incerment size 
     return insertBSTrecurse(t,t->root,newNode,value); //call recursive helper
 }
@@ -83,7 +89,11 @@ BSTNODE *insertBST(BST *t,void *value)
 BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
 {
     
-    int cmp = t->compare(getBSTNODEvalue(root), value);
+        if(root == NULL)
+        {
+            return NULL;
+        }
+        int cmp = t->compare(getBSTNODEvalue(root), value);
     
         if(cmp <= 0 && getBSTNODEleft(root) == NULL)// if its less and the spot is empty
         {
@@ -97,9 +107,9 @@ BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
             setBSTNODEparent(newNode, root);
             return newNode;
         }
-        if(cmp <= 0 & getBSTNODEleft(root) != NULL) //recure if spot isnt empty
+        if(cmp <= 0 && getBSTNODEleft(root) != NULL) //recure if spot isnt empty
                 insertBSTrecurse(t,getBSTNODEleft(root),newNode, value);
-        if(cmp > 0 & getBSTNODEright(root) != NULL) //recurse if not empty
+        if(cmp > 0 && getBSTNODEright(root) != NULL) //recurse if not empty
                 insertBSTrecurse(t,getBSTNODEright(root),newNode, value);
         return NULL;
         
@@ -111,10 +121,11 @@ BSTNODE *findBST(BST *t,void *value)
 }
 
 BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
-{
-    int cmp = t->compare(getBSTNODEvalue(node), value);
-    if(node == NULL)
+{   
+    if(node == NULL || node == 0)
         return NULL;
+    int cmp = t->compare(getBSTNODEvalue(node), value);
+    
     if(cmp ==0)
         return node;
     if(cmp <= 0)
@@ -151,7 +162,7 @@ BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)
     {
         step = getBSTNODEright(node); //Go left once
     
-        while(step != NULL)
+        while(getBSTNODEleft(step) != NULL)
         {
             step = getBSTNODEleft(step); // Then go all the way right
         }
@@ -160,7 +171,7 @@ BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)
     {
        step = getBSTNODEleft(node); //Go left once
     
-        while(step != NULL)
+        while(getBSTNODEright(step) != NULL)
         {
             step = getBSTNODEright(step); // Then go all the way right
         }
@@ -191,9 +202,9 @@ int     sizeBST(BST *t)
 
 void    statisticsBST(BST *t,FILE *fp)
 {
-    fprintf(fp, "Nodes: %d",sizeBST(t));
-    fprintf(fp, "Minimum Depth: %d",minHeightBST(t->root));
-    fprintf(fp, "Maximum Depth: %d",maxHeightBST(t->root));
+    fprintf(fp, "Nodes: %d\n",sizeBST(t));
+    fprintf(fp, "Minimum Depth: %d\n",minHeightBST(t->root));
+    fprintf(fp, "Maximum Depth: %d\n",maxHeightBST(t->root));
 }
 
 int maxHeightBST(BSTNODE *node)
@@ -212,8 +223,9 @@ int minHeightBST(BSTNODE *node)
 }
 
 void    displayBST(BST *t,FILE *fp)
-{
+{   
     preorder(t,t->root,fp);
+    
 }
 void preorder(BST *t, BSTNODE * node, FILE * fp)
 {
@@ -239,7 +251,7 @@ void    displayBSTdebug(BST *t,FILE *fp)
         while(level > 0)
         {
             BSTNODE * node = (BSTNODE*)dequeue(queue);
-            t->display(getBSTNODEvalue(t->root), fp);
+            t->display(getBSTNODEvalue(node), fp);
             
             if(level > 1)
                 fprintf(fp, " ");

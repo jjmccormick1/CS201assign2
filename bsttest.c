@@ -13,7 +13,6 @@ int main (void)
 {
     int num[] = {1, 2, 3 ,4 ,5};
     BST * bst = newBST(displayInt, compareInt,  swapInt, freeInt);
-    printf("test");
     for(int i =0;i < 5; i++)
     {
       insertBST(bst, &num[i]);   
@@ -21,7 +20,7 @@ int main (void)
     statisticsBST(bst,stdout);
     printf("\n");
     displayBST(bst, stdout);
-    displayBSTdebug(bst,stdout);
+    //displayBSTdebug(bst,stdout);
     
     deleteBST(bst, &num[0]);
     deleteBST(bst, &num[3]);
