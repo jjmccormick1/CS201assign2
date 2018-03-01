@@ -12,8 +12,8 @@ queue.o:  sll.o
 	$(CC) $(CFLAGS) queue.c queue.h 
 queuetest.o: queue.o
 	$(CC) $(CFLAGS) queuetest.c
-queuetest: queuetest.o
-	$(CC) $(LFLAGS) sll.o queue.o queuetest.o -o queuetest
+queuetest: queuetest.o bst.o
+	$(CC) $(LFLAGS) bst.o sll.o queue.o queuetest.o -o queuetest
 
 
 bst.o:  queue.o
@@ -30,12 +30,12 @@ gsttest.o: gst.o
 gsttest: gsttest.o
 	$(CC) $(LDFLAGS) sll.o  queue.o bst.o gst.o gsttest.o -o gsttest
 
-test: bsttest queuetest
+test:  bsttest queuetest
 	@./queuetest
 	@echo "\n"	
 	@./bsttest
-	@echo "\n"
-	@./gsttest
+	#@echo "\n"
+	#@./gsttest
 clean:
 	@rm -rf *.o
 	@rm -rf *.gch

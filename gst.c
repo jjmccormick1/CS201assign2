@@ -3,10 +3,11 @@
 //gst.c
 //green search tree module based on bst. handles duplicates better
 #include<stdio.h>
+#include<stdlib.h>
 #include "bst.h"
 #include "gst.h"
 
-GSTVALUE * newGSTVALUE(void * val);
+GSTVALUE * newGSTVALUE(GST *,void * val);
 void swapperGST(BSTNODE *, BSTNODE *);
 int compareGST(void *, void *);
 
@@ -19,19 +20,19 @@ struct gst{
     void (*free)(void *);
 };
 
-typedef struct gstvalue {
+struct gstvalue {
     void * value;
     int frequency;
     void (*display)(void *, FILE *);
     int (*compare)(void *, void *);
-}GSTVALUE;
+};
 
 GST *newGST(void (*display)(void *,FILE *), int (*compare)(void *,void *), void (*free)(void *))
 {
     GST * gst = malloc(sizeof(GST));
     gst->bst = newBST(display,compareGST, swapperGST , free);
     gst->display = display;
-    gst->compare = comapre;
+    gst->compare = compare;
     gst->free = free;
 }
 
@@ -42,6 +43,7 @@ GSTVALUE * newGSTVALUE(GST * gst,void * val)
     gstvalue->frequency  = 1;
     gstvalue->display = gst->display;
     gstvalue->compare = gst->compare;
+    return gstvalue;
 }
 
 void swapperGST(BSTNODE * a, BSTNODE * b)
@@ -67,13 +69,10 @@ void insertGST(GST * gst,void * value)
     numInsert++;
     if(found == NULL) //if not in tree, add it
     {
-        GSTVALUE * gstvalue = malloc(sizeof(GSTVALUE));
-        gstvalue->value = value;
-        gstvalue->frequency  = 1;
         insertBST(gst->bst, gstvalue);
         return;
     }
-    GSTVALUE * gstval = getBSTNODEvalue(found); //if is in tree, increment frequency
+    gstval = getBSTNODEvalue(found); //if is in tree, increment frequency
     gstval->frequency += 1; 
 }
 int findGSTcount(GST * gst,void * value)

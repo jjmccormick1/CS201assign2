@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "queue.h"
-
+#include "bst.h"
 void displayInt(void *, FILE * fp);
 void freeInt(void * in);
 
@@ -10,20 +10,28 @@ void freeInt(void * in);
 int main (void)
 {
     int num[] = {1, 2, 3 ,4 ,5};
+    BSTNODE * root = newBSTNODE(&num[0]);
+    BSTNODE * node1 = newBSTNODE(&num[2]);
+    BSTNODE * node2 = newBSTNODE(&num[4]);
     QUEUE * queue = newQUEUE(displayInt, freeInt);
-    for(int i =0;i < 5; i++)
-    {
-      enqueue(queue, &num[i]);   
-    }
+    
+    setBSTNODEparent(node1, root);
+    setBSTNODEparent(node2, root);
+    setBSTNODEleft(root,node1);
+    setBSTNODEright(root, node2);
+    
+    enqueue(queue, root);
     displayQUEUE(queue, stdout);
     printf("\n");
-    displayInt(dequeue(queue), stdout);
+    void * out = dequeue(queue);
+    displayInt(out, stdout);
     freeQUEUE(queue);
 }
 
 void displayInt(void * in, FILE * fp)
-{
-    int * tmp = (int*)in;
+{   
+    BSTNODE * node = (BSTNODE*)in;
+    int * tmp = (int*)getBSTNODEvalue(node);
     int out = *tmp;
     fprintf(fp,"%d",out);
 }
