@@ -20,8 +20,9 @@ int main (void)
     statisticsBST(bst,stdout);
     printf("\n");
     displayBST(bst, stdout);
-    //displayBSTdebug(bst,stdout);
-    
+    fflush(stdout);
+    displayBSTdebug(bst,stdout);
+
     deleteBST(bst, &num[0]);
     deleteBST(bst, &num[3]);
     

@@ -223,27 +223,25 @@ int minHeightBST(BSTNODE *node)
 }
 
 void    displayBST(BST *t,FILE *fp)
-{   
+{
     preorder(t,t->root,fp);
-    
 }
 void preorder(BST *t, BSTNODE * node, FILE * fp)
 {
     fprintf(fp,"[");
-        if(node == NULL)
-        {
-            fprintf(fp,"]");
-            return;
-        }
         t->display(getBSTNODEvalue(node), fp);
-        preorder(t, getBSTNODEleft(node), fp);
-        preorder(t, getBSTNODEright(node), fp);
+        
+        if(getBSTNODEleft(node) != NULL)
+            preorder(t, getBSTNODEleft(node), fp);
+        if(getBSTNODEright(node) != NULL)
+            preorder(t, getBSTNODEright(node), fp);
+        fprintf(fp,"]");
 }
 
 void    displayBSTdebug(BST *t,FILE *fp)
 {
     QUEUE * queue = newQUEUE(t->display, t->free);
-    enqueue(queue,t->root); //put root into queue to start things off
+    enqueue(queue,(void *)t->root); //put root into queue to start things off
     
     while(sizeQUEUE(queue) > 0)
     {
@@ -256,9 +254,9 @@ void    displayBSTdebug(BST *t,FILE *fp)
             if(level > 1)
                 fprintf(fp, " ");
             if(getBSTNODEleft(node) != NULL)
-                enqueue(queue, getBSTNODEleft(node) ); //add left into queue
+                enqueue(queue, (void *)getBSTNODEleft(node) ); //add left into queue
             if(getBSTNODEright(node) != NULL)
-                enqueue(queue, getBSTNODEright(node) ); //add right into queue
+                enqueue(queue, (void *)getBSTNODEright(node) ); //add right into queue
             level--;
         }
         fprintf(fp,"\n");
