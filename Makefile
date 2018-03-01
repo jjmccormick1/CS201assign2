@@ -23,10 +23,19 @@ bsttest.o: bst.o
 bsttest:  bsttest.o  
 	$(CC) $(LFLAGS) sll.o  queue.o bst.o bsttest.o -o bsttest
 
+gst.o: bst.o
+	$(CC) $(CFLAGS) gst.c gst.h
+gsttest.o: gst.o
+	$(CC) $(CFLAGS) gsttest.c
+gsttest: gsttest.o
+	$(CC) $(LDFLAGS) sll.o  queue.o bst.o gst.o gsttest.o -o gsttest
 
 test: bsttest queuetest
-	@./queuetest	
+	@./queuetest
+	@echo "\n"	
 	@./bsttest
+	@echo "\n"
+	@./gsttest
 clean:
 	@rm -rf *.o
 	@rm -rf *.gch

@@ -4,10 +4,13 @@
 //green search tree module based on bst. handles duplicates better
 #include<stdio.h>
 #include "bst.h"
+#include "gst.h"
 
 GSTVALUE * newGSTVALUE(void * val);
 void swapperGST(BSTNODE *, BSTNODE *);
 int compareGST(void *, void *);
+
+int numInsert = 0;
 
 struct gst{
     BST * bst;
@@ -26,7 +29,7 @@ typedef struct gstvalue {
 GST *newGST(void (*display)(void *,FILE *), int (*compare)(void *,void *), void (*free)(void *))
 {
     GST * gst = malloc(sizeof(GST));
-    gst->bst = newBST(display,compare, swapperGST , free);
+    gst->bst = newBST(display,compareGST, swapperGST , free);
     gst->display = display;
     gst->compare = comapre;
     gst->free = free;
@@ -59,8 +62,9 @@ int compareGST(void * a, void * b)
 }
 void insertGST(GST * gst,void * value)
 {
-    BSTNODE * found = findBST(gst->bst, value); //See if its in the tree
-    
+    GSTVALUE * gstval = newGSTVALUE(gst, value); //make a new gstval for comparison
+    BSTNODE * found = findBST(gst->bst, gstval); //pass it as the value instead of raw val
+    numInsert++;
     if(found == NULL) //if not in tree, add it
     {
         GSTVALUE * gstvalue = malloc(sizeof(GSTVALUE));
@@ -74,7 +78,8 @@ void insertGST(GST * gst,void * value)
 }
 int findGSTcount(GST * gst,void * value)
 {
-     BSTNODE * found = findBST(gst->bst, value); //See if its in the tree
+     GSTVALUE * gstval = newGSTVALUE(gst, value); //make a new gstval for comparison
+    BSTNODE * found = findBST(gst->bst, gstval); //pass it as the value instead of raw val, see if its in the tree
      
      if(found == NULL)
          return 0;
@@ -85,20 +90,47 @@ int findGSTcount(GST * gst,void * value)
 
 void *findGST(GST * gst,void * value)
 {
-    BSTNODE * found = findBST(gst->bst, value);
+    GSTVALUE * gstval = newGSTVALUE(gst, value); //make a new gstval for comparison
+    BSTNODE * found = findBST(gst->bst, gstval); //pass it as the value instead of raw val
     if(found == NULL)
         return NULL;
     return value;
 }
 void *deleteGST(GST * gst,void * value)
 {
-    return deleteBST(gst->bst, value);
+    GSTVALUE * gstval = newGSTVALUE(gst, value);
+    numInsert--;
+    return deleteBST(gst->bst, gstval);
 }
-    extern int sizeGST(GST *);
-    extern int duplicates(GST *);
-    extern void statisticsGST(GST *,FILE *);
-    extern void displayGST(GST *,FILE *);
-    extern void displayGSTdebug(GST *,FILE *);
-    extern void freeGST(GST *);
 
-    #endif
+int sizeGST(GST * gst)
+{
+    return sizeBST(gst->bst);
+}
+
+int duplicates(GST * gst)
+{
+    return numInsert - sizeBST(gst->bst);
+}
+
+void statisticsGST(GST *gst,FILE * fp)
+{
+    statisticsBST(gst->bst, fp);
+}
+
+void displayGST(GST * gst,FILE * fp)
+{
+    displayBST(gst->bst, fp);
+}
+
+void displayGSTdebug(GST *gst,FILE * fp)
+{
+    displayGSTdebug(gst->bst, fp);
+}
+void freeGST(GST * gst)
+{
+    freeBST(gst->bst);
+    free(gst);
+}
+
+ 
