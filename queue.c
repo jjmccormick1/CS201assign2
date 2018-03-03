@@ -5,71 +5,106 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#include "sll.h"
 #include "queue.h"
 
+NODE * newNODE(void *);
+
 struct queue {
-    SLL * sll;
+    NODE * head;
+    NODE * last;
+    int size;
     void (*display)(void *, FILE *);
     void (*free)(void *);
+};
+
+struct node {
+    void * value;
+    NODE * next;
 };
 
 QUEUE *newQUEUE(void (*d)(void *,FILE *),void (*f)(void *))
 {
     QUEUE * items = malloc(sizeof(QUEUE));
-    items->sll = newSLL(d,f);
+    items->head = NULL;
+    items->last = NULL;
     items->display = d;
     items->free = f;
     return items;
 }
+
+NODE * newNODE(void * value)
+{
+    NODE * node = malloc(sizeof(NODE));
+    node->value = value;
+    node->next = NULL;
+    return node;
+}
 void enqueue(QUEUE *items,void *value)
 {
-        insertSLL(items->sll, 0, value); //insert into sll at front
+    NODE * newNode = newNODE(value);
+    items->size++;
+    if(items->head == NULL)
+    {
+        items->head = newNode;
+        items->last = newNode;
+    }
+    else
+    {
+        (items->last)->next = newNode;
+        items->last = newNode;
+    }
 }
 
 void *dequeue(QUEUE *items)
 {
-        return removeSLL(items->sll,sizeSLL(items->sll));
+    items->size--;
+       NODE * out = items->head;
+       void * outval = out->value;
+       items->head = (items->head)->next;
+       return outval;
 }
 
 void *peekQUEUE(QUEUE *items)
 {
-        return getSLL(items->sll, sizeSLL(items->sll));
+        return (items->head)->value;
 }
 int sizeQUEUE(QUEUE *items)
 {
-    return sizeSLL(items->sll);
+    return items->size;
 }
 
 void displayQUEUE(QUEUE *items,FILE * fp)
 {
+    NODE * step = items->head;
     printf("<");
-        for(int i = 0; i < sizeSLL(items->sll) ; i++)
+        for(int i = 0; i < items->size; i++)
         {
-            items->display(getSLL(items->sll, i), fp);
-             if(i != sizeSLL(items->sll)-1)
+            items->display(step->value, fp);
+             if(i != items->size-1)
                 printf(",");
+             step = step->next;
         }
         printf(">");
 }
 void displayQUEUEdebug(QUEUE *items,FILE * fp)
 {
-    if(sizeSLL(items->sll) == 1)
+    if(items->size == 1)
         {
             printf("head->{");
-            items->display(getSLL(items->sll, 0), fp);
+            items->display((items->head)->value, fp);
             printf("},tail->{");
-            items->display(getSLL(items->sll, 0), fp);
+            items->display((items->head)->value, fp);
             printf("}");
             return;
         }
         printf("head->{");
-        for(int i = 0; i < sizeSLL(items->sll) ; i++)
+        NODE * step = items->head;
+        for(int i = 0; i < items->size ; i++)
         {
-            if(i == (sizeSLL(items->sll) - 1))
+            if(i == (items->size - 1))
                 printf("}, tail->{");
-            items->display(getSLL(items->sll, i), fp);
-            if(i < (sizeSLL(items->sll)-2))
+            items->display(step->value, fp);
+            if(i < items->size-2)
                 printf(",");
             
         }
@@ -78,6 +113,11 @@ void displayQUEUEdebug(QUEUE *items,FILE * fp)
 
 void freeQUEUE(QUEUE *items)
 {
-    freeSLL(items->sll);
+    NODE * step = items->head;
+    while(step != NULL)
+    {
+        freeNODE(items,step);
+        step = step->next;
+    }
     free(items);
 }

@@ -5,7 +5,7 @@
 #include <stdio.h>
 
     typedef struct queue QUEUE;
-
+    typedef struct node NODE;
     extern QUEUE *newQUEUE(void (*d)(void *,FILE *),void (*f)(void *)); 
     extern void enqueue(QUEUE *items,void *value);
     extern void *dequeue(QUEUE *items);

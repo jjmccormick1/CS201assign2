@@ -30,8 +30,8 @@ int main (void)
 
 void displayInt(void * in, FILE * fp)
 {   
-    BSTNODE * node = (BSTNODE*)in;
-    int * tmp = (int*)getBSTNODEvalue(node);
+    BSTNODE * node = in;
+    int * tmp = getBSTNODEvalue(node);
     int out = *tmp;
     fprintf(fp,"%d",out);
 }
