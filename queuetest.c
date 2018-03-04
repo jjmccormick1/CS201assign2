@@ -21,10 +21,13 @@ int main (void)
     setBSTNODEright(root, node2);
     
     enqueue(queue, root);
+    printf("Printing BSTNODE value from queue\n");
     displayQUEUE(queue, stdout);
     printf("\n");
     void * out = dequeue(queue);
+    printf("printing removed value\n");
     displayInt(out, stdout);
+    printf("\n");
     freeQUEUE(queue);
 }
 

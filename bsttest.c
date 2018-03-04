@@ -17,16 +17,22 @@ int main (void)
     {
       insertBST(bst, &num[i]);   
     }
+    
+    printf("Printing stats:\n");
     statisticsBST(bst,stdout);
     printf("\n");
+    printf("Printing displayBST()\n");
     displayBST(bst, stdout);
+    printf("\n");
     fflush(stdout);
+    printf("Printing displayBSTdebug()\n");
     displayBSTdebug(bst,stdout);
-
-    deleteBST(bst, &num[0]);
+    printf("\n");
+    deleteBST(bst, &num[1]);
     deleteBST(bst, &num[3]);
-    
+    printf("Printing displayBSTdebug() after deletes\n");
     displayBSTdebug(bst,stdout);
+    printf("\n");
     //freeBST(bst);
 }
 
