@@ -263,7 +263,7 @@ void    displayBSTdebug(BST *t,FILE *fp)
     }
 }
 
-void    freeBST(BST *t)
+void freeBST(BST *t)
 {
     freeRecurse(t, t->root);
     free(t);

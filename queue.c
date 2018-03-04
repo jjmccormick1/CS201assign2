@@ -116,7 +116,7 @@ void freeQUEUE(QUEUE *items)
     NODE * step = items->head;
     while(step != NULL)
     {
-        freeNODE(items,step);
+        free(step->value);
         step = step->next;
     }
     free(items);

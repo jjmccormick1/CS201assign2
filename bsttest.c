@@ -27,7 +27,7 @@ int main (void)
     deleteBST(bst, &num[3]);
     
     displayBSTdebug(bst,stdout);
-    freeBST(bst);
+    //freeBST(bst);
 }
 
 void displayInt(void * in, FILE * fp)
