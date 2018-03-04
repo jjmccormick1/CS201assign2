@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "gst.h"
+#include "bst.h"
 
 void displayInt(void *, FILE * fp);
 int compareInt(void *, void *);
@@ -12,22 +13,27 @@ void swapInt(BSTNODE * a, BSTNODE * b);
 int main (void)
 {
     int num[] = {1, 2, 3 ,4 ,5};
-    BST * gst = newGST(displayInt, compareInt, freeInt);
+    GST * gst = newGST(displayInt, compareInt, freeInt);
     for(int i =0;i < 5; i++)
     {
       insertGST(gst, &num[i]);   
     }
+    printf("Printing GST stats \n");
     statisticsGST(gst,stdout);
     printf("\n");
+    printf("Printing displayGST()\n");
     displayGST(gst, stdout);
+    printf("\n");
     fflush(stdout);
+    printf("Printing displayGSTdebug()\n");
     displayGSTdebug(gst,stdout);
 
     deleteGST(gst, &num[0]);
     deleteGST(gst, &num[3]);
-    
+    printf("\n");
+    printf("Printing displayGSTdebug() after deletes");
     displayGSTdebug(gst,stdout);
-    freeBST(bst);
+    //freeBST(bst);
 }
 
 void displayInt(void * in, FILE * fp)

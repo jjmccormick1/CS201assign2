@@ -26,14 +26,15 @@ gsttest.o: gst.o
 gsttest: gsttest.o
 	$(CC) $(LDFLAGS)  queue.o bst.o gst.o gsttest.o -o gsttest
 
-test:  bsttest queuetest
+test:  gsttest  bsttest queuetest
 	@./queuetest
 	@echo "\n"	
 	@./bsttest
-	#@echo "\n"
-	#@./gsttest
+	@echo "\n"
+	@./gsttest
 clean:
 	@rm -rf *.o
 	@rm -rf *.gch
 	@rm -rf bsttest
 	@rm -rf queuetest
+	@rm -rf gsttest

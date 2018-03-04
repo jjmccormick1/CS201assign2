@@ -34,12 +34,13 @@ GST *newGST(void (*display)(void *,FILE *), int (*compare)(void *,void *), void 
     gst->display = display;
     gst->compare = compare;
     gst->free = free;
+    return gst;
 }
 
 GSTVALUE * newGSTVALUE(GST * gst,void * val)
 {
     GSTVALUE * gstvalue = malloc(sizeof(GSTVALUE));
-    gstvalue->value = value;
+    gstvalue->value = val;
     gstvalue->frequency  = 1;
     gstvalue->display = gst->display;
     gstvalue->compare = gst->compare;
@@ -69,7 +70,7 @@ void insertGST(GST * gst,void * value)
     numInsert++;
     if(found == NULL) //if not in tree, add it
     {
-        insertBST(gst->bst, gstvalue);
+        insertBST(gst->bst, gstval);
         return;
     }
     gstval = getBSTNODEvalue(found); //if is in tree, increment frequency
@@ -83,7 +84,7 @@ int findGSTcount(GST * gst,void * value)
      if(found == NULL)
          return 0;
      
-     GSTVALUE * gstval = getBSTNODEvalue(found);
+     gstval = getBSTNODEvalue(found);
      return gstval->frequency;
 }
 
@@ -124,7 +125,7 @@ void displayGST(GST * gst,FILE * fp)
 
 void displayGSTdebug(GST *gst,FILE * fp)
 {
-    displayGSTdebug(gst->bst, fp);
+    displayBSTdebug(gst->bst, fp);
 }
 void freeGST(GST * gst)
 {
