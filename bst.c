@@ -10,8 +10,7 @@ int maxHeightBST(BSTNODE *node);
 void preorder(BST *t, BSTNODE * node, FILE * fp);
 BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value);
 BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value);
-void freeRecurse(BST * t,BSTNODE * node);
-
+void freeBSTrecurse(BST *, BSTNODE *);
 struct bstnode
 {
     void * value;
@@ -39,12 +38,10 @@ void    setBSTNODEright(BSTNODE *n,BSTNODE *replacement) {n->right = replacement
 BSTNODE *getBSTNODEparent(BSTNODE *n) {return n->parent; }
 void    setBSTNODEparent(BSTNODE *n,BSTNODE *replacement) {n->parent = replacement; }
 
-void    freeBSTNODE(BSTNODE *n,void (*free)(void *))
+void    freeBSTNODE(BSTNODE *n,void (*infree)(void *))
 {
-        free(n->value);
-        free(n->parent);
-        free(n->left);
-        free(n->right);
+        infree(n->value);
+        free(n);
 }
 
 struct bst
@@ -242,10 +239,10 @@ void    displayBSTdebug(BST *t,FILE *fp)
 {
     QUEUE * queue = newQUEUE(t->display, t->free);
     enqueue(queue,(void *)t->root); //put root into queue to start things off
-    
+    int level = 0;
     while(sizeQUEUE(queue) > 0)
     {
-        int level = sizeQUEUE(queue); //get queue size for newline
+        level = sizeQUEUE(queue); //get queue size for newline
         while(level > 0)
         {
             BSTNODE * node = (BSTNODE*)dequeue(queue);
@@ -261,20 +258,19 @@ void    displayBSTdebug(BST *t,FILE *fp)
         }
         fprintf(fp,"\n");
     }
+    freeQUEUE(queue);
 }
 
 void freeBST(BST *t)
 {
-    freeRecurse(t, t->root);
+   // freeBSTrecurse(t, t->root);
     free(t);
 }
-
-void freeRecurse(BST *t,BSTNODE * node)
+void freeBSTrecurse(BST * bst,BSTNODE *node)
 {
-    if(getBSTNODEleft(node) != NULL)
-        freeRecurse(t, getBSTNODEleft(node));
-    if(getBSTNODEright(node) != NULL)
-        freeRecurse(t, getBSTNODEright(node));
-    
-    freeBSTNODE(node, t->free);
+    if(node == NULL)
+        return;
+    freeBSTrecurse(bst, getBSTNODEleft(node));
+    freeBSTrecurse(bst, getBSTNODEright(node));
+    bst->free(getBSTNODEvalue(node));
 }

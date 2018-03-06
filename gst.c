@@ -10,7 +10,7 @@
 GSTVALUE * newGSTVALUE(GST *,void * val);
 void swapperGST(BSTNODE *, BSTNODE *);
 int compareGST(void *, void *);
-
+void printGST(void *, FILE *);
 int numInsert = 0;
 
 struct gst{
@@ -25,12 +25,13 @@ struct gstvalue {
     int frequency;
     void (*display)(void *, FILE *);
     int (*compare)(void *, void *);
+    void (*free)(void *);
 };
 
 GST *newGST(void (*display)(void *,FILE *), int (*compare)(void *,void *), void (*free)(void *))
 {
     GST * gst = malloc(sizeof(GST));
-    gst->bst = newBST(display,compareGST, swapperGST , free);
+    gst->bst = newBST(printGST,compareGST, swapperGST , free);
     gst->display = display;
     gst->compare = compare;
     gst->free = free;
@@ -44,6 +45,7 @@ GSTVALUE * newGSTVALUE(GST * gst,void * val)
     gstvalue->frequency  = 1;
     gstvalue->display = gst->display;
     gstvalue->compare = gst->compare;
+    gstvalue->free    = gst->free;
     return gstvalue;
 }
 
@@ -62,6 +64,11 @@ int compareGST(void * a, void * b)
     GSTVALUE * gstb = (GSTVALUE*)b;
     
     return gsta->compare(gsta->value, gstb->value);
+}
+void printGST(void * node, FILE * fp)
+{
+        GSTVALUE * gstnode = node;
+        gstnode->display(gstnode->value,fp);
 }
 void insertGST(GST * gst,void * value)
 {
@@ -127,6 +134,7 @@ void displayGSTdebug(GST *gst,FILE * fp)
 {
     displayBSTdebug(gst->bst, fp);
 }
+
 void freeGST(GST * gst)
 {
     freeBST(gst->bst);

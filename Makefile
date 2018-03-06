@@ -24,7 +24,7 @@ gst.o: bst.o
 gsttest.o: gst.o
 	$(CC) $(CFLAGS) gsttest.c
 gsttest: gsttest.o
-	$(CC) $(LDFLAGS)  queue.o bst.o gst.o gsttest.o -o gsttest
+	$(CC) $(LFLAGS)  queue.o bst.o gst.o gsttest.o -o gsttest
 
 test:  gsttest  bsttest queuetest
 	@./queuetest

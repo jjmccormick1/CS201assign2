@@ -29,6 +29,7 @@ QUEUE *newQUEUE(void (*d)(void *,FILE *),void (*f)(void *))
     items->last = NULL;
     items->display = d;
     items->free = f;
+    items->size = 0;
     return items;
 }
 
@@ -61,6 +62,7 @@ void *dequeue(QUEUE *items)
        NODE * out = items->head;
        void * outval = out->value;
        items->head = (items->head)->next;
+       free(out);
        return outval;
 }
 
@@ -115,9 +117,10 @@ void freeQUEUE(QUEUE *items)
 {
     NODE * step = items->head;
     while(step != NULL)
-    {
-        free(step->value);
-        step = step->next;
+    {   
+        NODE * next = step->next;
+        free(step);
+        step = next;  
     }
     free(items);
 }

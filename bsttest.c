@@ -33,7 +33,7 @@ int main (void)
     printf("Printing displayBSTdebug() after deletes\n");
     displayBSTdebug(bst,stdout);
     printf("\n");
-    //freeBST(bst);
+    freeBST(bst);
 }
 
 void displayInt(void * in, FILE * fp)

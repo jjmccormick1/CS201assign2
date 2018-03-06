@@ -12,7 +12,7 @@ void swapInt(BSTNODE * a, BSTNODE * b);
 
 int main (void)
 {
-    int num[] = {1, 2, 3 ,4 ,5};
+    int num[] = {3, 2, 1 ,4 ,5};
     GST * gst = newGST(displayInt, compareInt, freeInt);
     for(int i =0;i < 5; i++)
     {
@@ -31,9 +31,9 @@ int main (void)
     deleteGST(gst, &num[0]);
     deleteGST(gst, &num[3]);
     printf("\n");
-    printf("Printing displayGSTdebug() after deletes");
+    printf("Printing displayGSTdebug() after deletes\n");
     displayGSTdebug(gst,stdout);
-    //freeBST(bst);
+    freeGST(gst);
 }
 
 void displayInt(void * in, FILE * fp)
