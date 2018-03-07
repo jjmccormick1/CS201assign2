@@ -63,6 +63,7 @@ void *dequeue(QUEUE *items)
        void * outval = out->value;
        items->head = (items->head)->next;
        free(out);
+       out = NULL;
        return outval;
 }
 
@@ -118,9 +119,11 @@ void freeQUEUE(QUEUE *items)
     NODE * step = items->head;
     while(step != NULL)
     {   
-        NODE * next = step->next;
-        free(step);
-        step = next;  
+        NODE * next = step;
+        step = step->next;  
+        free(next);
+        
     }
     free(items);
+    items=NULL;
 }

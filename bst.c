@@ -92,21 +92,21 @@ BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
         }
         int cmp = t->compare(getBSTNODEvalue(root), value);
     
-        if(cmp <= 0 && getBSTNODEleft(root) == NULL)// if its less and the spot is empty
+        if(cmp > 0 && getBSTNODEleft(root) == NULL)// if its less and the spot is empty
         {
             setBSTNODEleft(root, newNode);
             setBSTNODEparent(newNode, root);
             return newNode;
         }
-        if(cmp > 0 && getBSTNODEright(root) == NULL) //if its more and the sport is empty
+        if(cmp <= 0 && getBSTNODEright(root) == NULL) //if its more and the sport is empty
         {
             setBSTNODEright(root, newNode);
             setBSTNODEparent(newNode, root);
             return newNode;
         }
-        if(cmp <= 0 && getBSTNODEleft(root) != NULL) //recure if spot isnt empty
+        if(cmp > 0 && getBSTNODEleft(root) != NULL) //recure if spot isnt empty
                 insertBSTrecurse(t,getBSTNODEleft(root),newNode, value);
-        if(cmp > 0 && getBSTNODEright(root) != NULL) //recurse if not empty
+        if(cmp <= 0 && getBSTNODEright(root) != NULL) //recurse if not empty
                 insertBSTrecurse(t,getBSTNODEright(root),newNode, value);
         return NULL;
         
@@ -238,7 +238,7 @@ void preorder(BST *t, BSTNODE * node, FILE * fp)
 void    displayBSTdebug(BST *t,FILE *fp)
 {
     QUEUE * queue = newQUEUE(t->display, t->free);
-    enqueue(queue,(void *)t->root); //put root into queue to start things off
+    enqueue(queue,t->root); //put root into queue to start things off
     int level = 0;
     while(sizeQUEUE(queue) > 0)
     {
@@ -251,9 +251,10 @@ void    displayBSTdebug(BST *t,FILE *fp)
             if(level > 1)
                 fprintf(fp, " ");
             if(getBSTNODEleft(node) != NULL)
-                enqueue(queue, (void *)getBSTNODEleft(node) ); //add left into queue
+                enqueue(queue, getBSTNODEleft(node) ); //add left into queue
             if(getBSTNODEright(node) != NULL)
-                enqueue(queue, (void *)getBSTNODEright(node) ); //add right into queue
+                enqueue(queue, getBSTNODEright(node) ); //add right into queue
+            fflush(stdout);
             level--;
         }
         fprintf(fp,"\n");
@@ -263,7 +264,7 @@ void    displayBSTdebug(BST *t,FILE *fp)
 
 void freeBST(BST *t)
 {
-   // freeBSTrecurse(t, t->root);
+   freeBSTrecurse(t, t->root);
     free(t);
 }
 void freeBSTrecurse(BST * bst,BSTNODE *node)

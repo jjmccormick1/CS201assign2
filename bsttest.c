@@ -55,7 +55,7 @@ int compareInt(void * ina, void * inb)
 
 void freeInt(void * in)
 {
-    free(in);
+    //free(in);
 }
 
 void swapInt(BSTNODE * a, BSTNODE * b)

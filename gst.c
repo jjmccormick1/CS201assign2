@@ -11,6 +11,8 @@ GSTVALUE * newGSTVALUE(GST *,void * val);
 void swapperGST(BSTNODE *, BSTNODE *);
 int compareGST(void *, void *);
 void printGST(void *, FILE *);
+void freeGSTVALUE(void * in);
+
 int numInsert = 0;
 
 struct gst{
@@ -31,7 +33,7 @@ struct gstvalue {
 GST *newGST(void (*display)(void *,FILE *), int (*compare)(void *,void *), void (*free)(void *))
 {
     GST * gst = malloc(sizeof(GST));
-    gst->bst = newBST(printGST,compareGST, swapperGST , free);
+    gst->bst = newBST(printGST,compareGST, swapperGST , freeGSTVALUE);
     gst->display = display;
     gst->compare = compare;
     gst->free = free;
@@ -65,6 +67,14 @@ int compareGST(void * a, void * b)
     
     return gsta->compare(gsta->value, gstb->value);
 }
+
+void freeGSTVALUE(void * in)
+{
+        GSTVALUE * gstval = in;
+        gstval->free(gstval->value);
+        free(gstval);
+        gstval=NULL;
+}
 void printGST(void * node, FILE * fp)
 {
         GSTVALUE * gstnode = node;
@@ -82,6 +92,7 @@ void insertGST(GST * gst,void * value)
     }
     gstval = getBSTNODEvalue(found); //if is in tree, increment frequency
     gstval->frequency += 1; 
+    freeGSTVALUE(gstval);
 }
 int findGSTcount(GST * gst,void * value)
 {
@@ -92,13 +103,16 @@ int findGSTcount(GST * gst,void * value)
          return 0;
      
      gstval = getBSTNODEvalue(found);
-     return gstval->frequency;
+     int freq = gstval->frequency;
+     freeGSTVALUE(gstval);
+     return freq;
 }
 
 void *findGST(GST * gst,void * value)
 {
     GSTVALUE * gstval = newGSTVALUE(gst, value); //make a new gstval for comparison
     BSTNODE * found = findBST(gst->bst, gstval); //pass it as the value instead of raw val
+    freeGSTVALUE(gstval);
     if(found == NULL)
         return NULL;
     return value;
@@ -107,7 +121,8 @@ void *deleteGST(GST * gst,void * value)
 {
     GSTVALUE * gstval = newGSTVALUE(gst, value);
     numInsert--;
-    return deleteBST(gst->bst, gstval);
+    void * out = deleteBST(gst->bst, gstval);
+    return out;
 }
 
 int sizeGST(GST * gst)
