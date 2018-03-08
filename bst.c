@@ -247,14 +247,14 @@ void    displayBSTdebug(BST *t,FILE *fp)
         {
             BSTNODE * node = (BSTNODE*)dequeue(queue);
             t->display(getBSTNODEvalue(node), fp);
-            
+            fflush(stdout);
             if(level > 1)
                 fprintf(fp, " ");
             if(getBSTNODEleft(node) != NULL)
                 enqueue(queue, getBSTNODEleft(node) ); //add left into queue
             if(getBSTNODEright(node) != NULL)
                 enqueue(queue, getBSTNODEright(node) ); //add right into queue
-            fflush(stdout);
+            
             level--;
         }
         fprintf(fp,"\n");
