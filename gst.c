@@ -22,13 +22,13 @@ struct gst{
     void (*free)(void *);
 };
 
-typedef struct gstvalue {
+struct gstvalue {
     void * value;
     int frequency;
     void (*display)(void *, FILE *);
     int (*compare)(void *, void *);
     void (*free)(void *);
-}GSTVALUE;
+};
 
 GST *newGST(void (*display)(void *,FILE *), int (*compare)(void *,void *), void (*free)(void *))
 {
