@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <ctype.h>
 #include "scanner.h"
+
 
 int isGST = 0;
 void * tree;
@@ -13,6 +15,7 @@ char * getNext(FILE *);
 void * makeTree();
 void printString(void * );
 int compareString(void *, void *);
+char * cleanupString(char *);
 
 void insertTree(void *); //Wrapper for tree insert
 void deleteTree(void *); //Wrapper for tree delete
@@ -196,5 +199,27 @@ void statsTree()
     else
     {
         statisticsAVL(tree, in);
+    }
+}
+
+char * cleanupString(char * in)
+{
+    char * out = in;
+    for(int i = 0, j = 0; i < strlen(in); i++)
+    {
+        if(ispunct(in[i]))
+        {
+            j++;
+            continue;
+        }
+        
+        
+        if(isupper(in[i])
+        {
+            out[j] = tolower(in[i]);
+            j++;
+        }
+        out[j] = in[i];
+        
     }
 }
