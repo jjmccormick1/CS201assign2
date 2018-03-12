@@ -139,10 +139,33 @@ BSTNODE *deleteBST(BST *t,void *value)
     if(delNode == NULL)
         return NULL;
     
-    BSTNODE * leaf = swapToLeafBST(t,delNode);
-    pruneLeafBST(t,leaf);
+    if(getBSTNODEleft(delNode) == NULL && getBSTNODEright(delNode) == NULL) // case 1 - node is a leaf
+    {
+        pruneLeafBST(t, delNode);
+    }
+    
+    else if(getBSTNODEleft(delNode) == NULL && getBSTNODEright(delNode) != NULL ) //Case 2 - node has on child, right in this case
+    {
+        BSTNODE * child = getBSTNODEright(delNode);
+        BSTNODE * parent = getBSTNODEparent(delNode);
+        setBSTNODEright(parent, child);
+        setBSTNODEparent(child, parent);
+    }
+    else if(getBSTNODEleft(delNode) != NULL && getBSTNODEright(delNode) == NULL ) //Case 2 - node has on child, left in this case
+    {
+        BSTNODE * child = getBSTNODEleft(delNode);
+        BSTNODE * parent = getBSTNODEparent(delNode);
+        setBSTNODEleft(parent, child);
+        setBSTNODEparent(child, parent);
+    }
+    else                // Case 3, 2 children. Swap with predecessor and delete
+    {
+        BSTNODE * leaf = swapToLeafBST(t,delNode);
+        pruneLeafBST(t,leaf);
+    }
+    freeBSTNODE(delNode, t->free);
     t->size -= 1; //decrement size
-    return leaf;
+    return delNode;
 }
 
 BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)

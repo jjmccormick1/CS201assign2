@@ -4,17 +4,18 @@
 #include <string.h>
 #include <ctype.h>
 #include "scanner.h"
+#include "gst.h"
+#include "avl.h"
 
 
 int isGST = 0;
 void * tree;
 
-static int processOptions(int,char **);
-void Fatal(char *,...);
 char * getNext(FILE *);
-void * makeTree();
-void printString(void * );
+void makeTree();
+void printString(void * , FILE *);
 int compareString(void *, void *);
+void freeString(void *);
 char * cleanupString(char *);
 
 void insertTree(void *); //Wrapper for tree insert
@@ -52,7 +53,7 @@ main(int argc,char **argv)
         commands = argv[2];
     }
     FILE * corpusfp = fopen(corpus, "r"); //open up files
-    FILE commandsfp = fopen(commands, "r");
+    FILE * commandsfp = fopen(commands, "r");
     
     if(commandsfp == NULL || corpusfp == NULL) //Check to make sure files are open
     {
@@ -65,7 +66,7 @@ main(int argc,char **argv)
     char * incorpus;
     char incommand;
     
-    while(!feof(command) && !feof(incorpus)) // While were not at the end of any file
+    while(!feof(commandsfp) && !feof(corpusfp)) // While were not at the end of any file
     {
         incorpus = getNext(corpusfp);
         incommand = readChar(commandsfp);
@@ -94,7 +95,7 @@ main(int argc,char **argv)
             default:
                 printf("command not understood");
         }
-        
+    }
     
     
 
@@ -116,7 +117,7 @@ char * getNext(FILE * in)
 
 void makeTree()
 {
-    if(isGST) == 1)
+    if(isGST == 1)
     {
         tree = newGST(printString, compareString, freeString);
     }
@@ -171,11 +172,11 @@ int frequencyTree(void * in)
 {
     if(isGST == 1)
     {
-        return frequencyGST((GST*)tree, in);
+        return findGSTcount((GST*)tree, in);
     }
     else
     {
-        return frequencyAVL((AVL*)tree, in);
+        return findAVLcount((AVL*)tree, in);
     }
 }
 
@@ -183,11 +184,11 @@ void showTree()
 {
     if(isGST == 1)
     {
-        displayGST((GST*)tree, in);
+        displayGST((GST*)tree, stdout);
     }
     else
     {
-        displayAVL((AVL*)tree, in);
+        displayAVL((AVL*)tree, stdout);
     }
 }
 
@@ -195,43 +196,43 @@ void statsTree()
 {
     if(isGST == 1)
     {
-        statisticsGST(tree, in);
+        statisticsGST(tree, stdout);
     }
     else
     {
-        statisticsAVL(tree, in);
+        statisticsAVL(tree, stdout);
     }
 }
 
 char * cleanupString(char * in)
 {
     char * out = in;
-    for(int i = 0, j = 0; i < strlen(in); i++)
+    for(unsigned int i = 0, j = 0; i < strlen(in); i++)
     {
         if(ispunct(in[i]))
         {
             continue;
         }
         
-        else if(isupper(in[i])
+        else if(isupper(in[i]))
         {
             out[j] = tolower(in[i]);
             j++;
         }
         
-        else if(isspace(in[i])
+        else if(isspace(in[i]))
         {
             out[j] = in[i];
-            while(isspace(in[i]) && i < strlen(in)
+            while(isspace(in[i]) && i < strlen(in) )
             {
                 i++;
             }
-            j++
+            j++;
         }
         else
         {
             out[j] = in[i];
-            j++
+            j++;
         }
     }
     

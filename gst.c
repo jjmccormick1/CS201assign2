@@ -64,8 +64,8 @@ int compareGST(void * a, void * b)
 {
     GSTVALUE * gsta = (GSTVALUE*)a;
     GSTVALUE * gstb = (GSTVALUE*)b;
-    
-    return gsta->compare(gsta->value, gstb->value);
+
+    return gstb->compare(gsta->value, gstb->value);
 }
 
 void freeGSTVALUE(void * in)
@@ -119,10 +119,21 @@ void *findGST(GST * gst,void * value)
 }
 void *deleteGST(GST * gst,void * value)
 {
-    GSTVALUE * gstval = newGSTVALUE(gst, value);
+    GSTVALUE * gstval = newGSTVALUE(gst, value); //Make value for comparison
     numInsert--;
-    void * out = deleteBST(gst->bst, gstval);
-    return out;
+    BSTNODE * found = findBST(gst->bst, gstval);//Look for value in BST
+    
+    if(found == NULL)//If not found return NULL
+        return NULL;
+    
+    GSTVALUE * gstfound = getBSTNODEvalue(found);
+    
+    if(gstfound->frequency > 1)
+        gstfound->frequency--;
+    else if(gstfound->frequency == 1)
+        deleteBST(gst->bst, gstfound);
+    free(gstval);
+    return value;
 }
 
 int sizeGST(GST * gst)

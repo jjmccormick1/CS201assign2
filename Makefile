@@ -1,8 +1,8 @@
-CC=gcc
-CFLAGS=  -Wall -Wextra -c -ggdb -pedantic -std=c99 -O0
-LFLAGS=  -Wall -Wextra -pedantic  -std=c99 -ggdb
+CC=clang
+CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 -O0
+LFLAGS=  -Wall -Wextra  -std=c99 -ggdb
 
-all: test  clean
+all: trees.o
 
 queue.o:
 	$(CC) $(CFLAGS) queue.c queue.h 
@@ -25,6 +25,15 @@ gsttest.o: gst.o
 	$(CC) $(CFLAGS) gsttest.c
 gsttest: gsttest.o
 	$(CC) $(LFLAGS)  queue.o bst.o gst.o gsttest.o -o gsttest
+
+avl.o: bst.o
+	$(CC) $(CFLAGS) avl.c avl.h
+
+trees.o: gst.o  
+	$(CC) $(CFLAGS) trees.c
+	$(CC) $(LFLAGS) queue.o bst.o gst.o avl.o trees.o -o trees
+
+
 
 test:  gsttest  bsttest queuetest
 	@./queuetest
