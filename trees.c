@@ -69,6 +69,7 @@ main(int argc,char **argv)
     {
         incorpus = getNext(corpusfp);
         incommand = readChar(commandsfp);
+        cleanupString(incorpus);
         
         switch(incommand)
         {
@@ -209,17 +210,30 @@ char * cleanupString(char * in)
     {
         if(ispunct(in[i]))
         {
-            j++;
             continue;
         }
         
-        
-        if(isupper(in[i])
+        else if(isupper(in[i])
         {
             out[j] = tolower(in[i]);
             j++;
         }
-        out[j] = in[i];
         
+        else if(isspace(in[i])
+        {
+            out[j] = in[i];
+            while(isspace(in[i]) && i < strlen(in)
+            {
+                i++;
+            }
+            j++
+        }
+        else
+        {
+            out[j] = in[i];
+            j++
+        }
     }
+    
+    return out;
 }
