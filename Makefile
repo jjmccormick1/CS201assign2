@@ -9,7 +9,7 @@ queue.o:
 queuetest.o: queue.o
 	$(CC) $(CFLAGS) queuetest.c
 queuetest: queuetest.o bst.o
-	$(CC) $(LFLAGS) bst.o  queue.o queuetest.o -o queuetest
+	$(CC) $(LFLAGS) bst.o  queue.o queuetest.o  -o queuetest
 
 
 bst.o:  queue.o
