@@ -121,7 +121,8 @@ BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
 {   
     if(node == NULL || node == 0)
         return NULL;
-    int cmp = t->compare(getBSTNODEvalue(node), value);
+    void * tmp = getBSTNODEvalue(node);
+    int cmp = t->compare(tmp, value);
     
     if(cmp ==0)
         return node;

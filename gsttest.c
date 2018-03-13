@@ -9,10 +9,11 @@ void displayInt(void *, FILE * fp);
 int compareInt(void *, void *);
 void freeInt(void * in);
 void swapInt(BSTNODE * a, BSTNODE * b);
+static int num[] = {3, 2, 1 ,4 ,5};
 
 int main (void)
 {
-    int num[] = {3, 2, 1 ,4 ,5};
+    
     
     //int num [1000];
     GST * gst = newGST(displayInt, compareInt, freeInt);

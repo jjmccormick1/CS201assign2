@@ -42,7 +42,7 @@ GST *newGST(void (*display)(void *,FILE *), int (*compare)(void *,void *), void 
 
 GSTVALUE * newGSTVALUE(GST * gst,void * val)
 {
-    GSTVALUE * gstvalue = malloc(sizeof(GSTVALUE));
+    GSTVALUE * gstvalue = calloc(1,sizeof(GSTVALUE));
     gstvalue->value = val;
     gstvalue->frequency  = 1;
     gstvalue->display = gst->display;
@@ -131,7 +131,7 @@ void *deleteGST(GST * gst,void * value)
     if(gstfound->frequency > 1)
         gstfound->frequency--;
     else if(gstfound->frequency == 1)
-        deleteBST(gst->bst, gstfound);
+        deleteBST(gst->bst, gstval);
     free(gstval);
     return value;
 }
