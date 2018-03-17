@@ -11,6 +11,8 @@ void preorder(BST *t, BSTNODE * node, FILE * fp);
 BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value);
 BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value);
 void freeBSTrecurse(BST *, BSTNODE *);
+void genericSwapper(BSTNODE *, BSTNODE *);
+
 struct bstnode
 {
     void * value;
@@ -41,7 +43,7 @@ void    setBSTNODEparent(BSTNODE *n,BSTNODE *replacement) {n->parent = replaceme
 void    freeBSTNODE(BSTNODE *n,void (*infree)(void *))
 {
         infree(n->value);
-        free(n);
+        //free(n);
 }
 
 struct bst
@@ -60,7 +62,11 @@ BST *newBST( void (*display)(void *,FILE *),int (*compare)(void *,void *), void 
     bst->root = NULL;
     bst->size =0;
     bst->display = display;
-    bst->swapper = swapper;
+    
+    if(swapper == NULL || swapper == 0)
+        bst->swapper = &genericSwapper;
+    else
+        bst->swapper = swapper;
     bst->compare = compare;
     bst->free = free;
     return bst;
@@ -124,7 +130,7 @@ BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
     void * tmp = getBSTNODEvalue(node);
     int cmp = t->compare(tmp, value);
     
-    if(cmp ==0)
+    if(cmp == 0)
         return node;
     if(cmp <= 0)
         findBSTrecurse(t, getBSTNODEleft(node), value);
@@ -164,7 +170,7 @@ BSTNODE *deleteBST(BST *t,void *value)
         BSTNODE * leaf = swapToLeafBST(t,delNode);
         pruneLeafBST(t,leaf);
     }
-    freeBSTNODE(delNode, t->free);
+    //freeBSTNODE(delNode, t->free);
     t->size -= 1; //decrement size
     return delNode;
 }
@@ -298,4 +304,11 @@ void freeBSTrecurse(BST * bst,BSTNODE *node)
     freeBSTrecurse(bst, getBSTNODEleft(node));
     freeBSTrecurse(bst, getBSTNODEright(node));
     bst->free(getBSTNODEvalue(node));
+}
+
+void genericSwapper(BSTNODE * a, BSTNODE * b)
+{
+    void * tmp = a->value;
+    a->value = b->value; 
+    b->value = tmp;
 }

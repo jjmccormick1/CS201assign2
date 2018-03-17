@@ -4,18 +4,16 @@
 #include <stdio.h>
 #include "gst.h"
 #include "bst.h"
+#include "integer.h"
 
 void displayInt(void *, FILE * fp);
 int compareInt(void *, void *);
 void freeInt(void * in);
 void swapInt(BSTNODE * a, BSTNODE * b);
-static int num[] = {3, 2, 1 ,4 ,5};
+static int num[5] = {2,3,1,5,4};
 
 int main (void)
 {
-    
-    
-    //int num [1000];
     GST * gst = newGST(displayInt, compareInt, freeInt);
     for(int i =0;i < 5; i++)
     {
