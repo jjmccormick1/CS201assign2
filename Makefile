@@ -29,9 +29,11 @@ gst.o: bst.o
 	$(CC) $(CFLAGS) gst.c gst.h
 gsttest.o: gst.o
 	$(CC) $(CFLAGS) gsttest.c
-gsttest: gsttest.o
+	$(CC) $(CFLAGS) gst-0-0.c
+gsttest: gsttest.o integer.o
 	$(CC) $(LFLAGS)  queue.o bst.o gst.o gsttest.o -o gsttest
-
+	$(CC) $(LFLAGS) integer.o queue.o bst.o gst.o gst-0-0.o -o gsttestnew
+	
 avl.o: bst.o
 	$(CC) $(CFLAGS) avl.c avl.h
 
@@ -52,8 +54,10 @@ test:  gsttest  bsttest queuetest
 	@./bsttest
 	@echo "\n"
 	@./gsttest
+	@echo "\n"
+	@./gsttestnew
 
-valgrind:
+valgrind: test
 	@valgrind queuetestnew
 	@valgrind bsttestnew
 
@@ -63,3 +67,6 @@ clean:
 	@rm -rf bsttest
 	@rm -rf queuetest
 	@rm -rf gsttest
+	@rm -rf queuetestnew
+	@rm -rf bsttestnew
+	@rm -rf gsttestnew

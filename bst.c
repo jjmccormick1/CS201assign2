@@ -132,7 +132,7 @@ BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
     
     if(cmp == 0)
         return node;
-    if(cmp <= 0)
+    if(cmp < 0)
         findBSTrecurse(t, getBSTNODEleft(node), value);
     if(cmp > 0)
         findBSTrecurse(t, getBSTNODEright(node), value);

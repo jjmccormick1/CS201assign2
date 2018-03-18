@@ -3,8 +3,8 @@
 #include "bst.h"
 #include "gst.h"
 #include "integer.h"
-#include "real.h"
-#include "string.h"
+//#include "real.h"
+//#include "string.h"
 
 void srandom(unsigned int);
 long int random(void);

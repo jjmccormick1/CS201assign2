@@ -41,7 +41,7 @@ main(void)
             int j = random() % 10000;
             INTEGER *a = newINTEGER(j);
             if (findBST(p,a) != 0)
-                freeBSTNODE(deleteBST(p,a),freeINTEGER);
+                deleteBST(p,a);
             freeINTEGER(a);
             }
         }
