@@ -83,6 +83,7 @@ BSTNODE *insertBST(BST *t,void *value)
     {
         t->root = newNode;
         t->size = 1;
+        newNode->parent = newNode;
         return t->root;
     }
     t->size += 1;  //incerment size 
@@ -120,7 +121,23 @@ BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
 
 BSTNODE *findBST(BST *t,void *value)
 {
-    return findBSTrecurse(t, t->root, value);
+    BSTNODE * step = t->root;
+    while(step != NULL)
+    {
+        int cmp = t->compare(getBSTNODEvalue(step), value);
+        if(cmp == 0)
+        {
+            return step;
+        }
+        if(cmp < 0)
+            step = getBSTNODEleft(step);
+        if(cmp > 0)
+            step = getBSTNODEright(step);
+    }
+    return step;
+    
+    
+    //return findBSTrecurse(t, t->root, value);
 }
 
 BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
@@ -155,15 +172,19 @@ BSTNODE *deleteBST(BST *t,void *value)
     {
         BSTNODE * child = getBSTNODEright(delNode);
         BSTNODE * parent = getBSTNODEparent(delNode);
-        setBSTNODEright(parent, child);
-        setBSTNODEparent(child, parent);
+        if(parent != NULL)
+            setBSTNODEright(parent, child);
+        if(child != NULL)
+            setBSTNODEparent(child, parent);
     }
     else if(getBSTNODEleft(delNode) != NULL && getBSTNODEright(delNode) == NULL ) //Case 2 - node has on child, left in this case
     {
         BSTNODE * child = getBSTNODEleft(delNode);
         BSTNODE * parent = getBSTNODEparent(delNode);
-        setBSTNODEleft(parent, child);
-        setBSTNODEparent(child, parent);
+        if(parent != NULL)
+            setBSTNODEleft(parent, child);
+        if(child != NULL)
+            setBSTNODEparent(child, parent);
     }
     else                // Case 3, 2 children. Swap with predecessor and delete
     {

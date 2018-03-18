@@ -60,6 +60,7 @@ int compareInt(void * ina, void * inb)
 
 void freeInt(void * in)
 {
+    (void)in;
     //free(in);
 }
 

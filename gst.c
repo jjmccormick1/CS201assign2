@@ -71,7 +71,7 @@ int compareGST(void * a, void * b)
 void freeGSTVALUE(void * in)
 {
         GSTVALUE * gstval = in;
-        gstval->free(gstval->value);
+        //gstval->free(gstval->value);
         free(gstval);
         gstval=NULL;
 }
@@ -132,7 +132,7 @@ void *deleteGST(GST * gst,void * value)
         gstfound->frequency--;
     else if(gstfound->frequency == 1)
         deleteBST(gst->bst, gstval);
-    free(gstval);
+    //free(gstval);
     return value;
 }
 

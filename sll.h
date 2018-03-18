@@ -18,12 +18,18 @@ extern void displaySLLdebug(SLL *items,FILE *);
 extern void freeSLL(SLL *items);
 
 #endif
+
+#ifndef __NODE_TYPE_INCLUDED__
+#define __NODE_TYPE_INCLUDED__
+typedef struct node NODE; /* forward declaration of our structure */
+#endif
+
 #ifndef __NODE_INCLUDED__
 #define __NODE_INCLUDED__
 
 #include <stdio.h>
 
-typedef struct node NODE; /* forward declaration of our structure */
+
 
 extern NODE  *newNODE(void *value,NODE *next);     /* constructor */
 extern void  *getNODEvalue(NODE *n);
