@@ -176,19 +176,25 @@ BSTNODE *deleteBST(BST *t,void *value)
     {
         BSTNODE * child = getBSTNODEright(delNode);
         BSTNODE * parent = getBSTNODEparent(delNode);
-        if(parent != NULL)
+        
+        if(getBSTNODEleft(parent) == delNode)
+            setBSTNODEleft(parent, child);
+        else
             setBSTNODEright(parent, child);
-        if(child != NULL)
-            setBSTNODEparent(child, parent);
+        setBSTNODEparent(child, parent);
     }
     else if(getBSTNODEleft(delNode) != NULL && getBSTNODEright(delNode) == NULL ) //Case 2 - node has on child, left in this case
     {
         BSTNODE * child = getBSTNODEleft(delNode);
         BSTNODE * parent = getBSTNODEparent(delNode);
-        if(parent != NULL)
+        
+        if(getBSTNODEleft(parent) == delNode)
             setBSTNODEleft(parent, child);
-        if(child != NULL)
-            setBSTNODEparent(child, parent);
+        else
+            setBSTNODEright(parent, child);
+        
+       setBSTNODEparent(child, parent);
+        
     }
     else                // Case 3, 2 children. Swap with predecessor and delete
     {
