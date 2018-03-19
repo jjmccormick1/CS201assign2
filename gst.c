@@ -133,7 +133,7 @@ void *deleteGST(GST * gst,void * value)
     else if(gstfound->frequency == 1)
         deleteBST(gst->bst, gstval);
     //free(gstval);
-    return value;
+    return gstfound->value;
 }
 
 int sizeGST(GST * gst)
@@ -153,7 +153,7 @@ void statisticsGST(GST *gst,FILE * fp)
 
 void displayGST(GST * gst,FILE * fp)
 {
-    displayBST(gst->bst, fp);
+    displayBSTdecorated(gst->bst, fp);
 }
 
 void displayGSTdebug(GST *gst,FILE * fp)

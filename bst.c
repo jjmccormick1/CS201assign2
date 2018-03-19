@@ -129,12 +129,12 @@ BSTNODE *findBST(BST *t,void *value)
         {
             return step;
         }
-        if(cmp < 0)
-            step = getBSTNODEleft(step);
         if(cmp > 0)
+            step = getBSTNODEleft(step);
+        if(cmp < 0)
             step = getBSTNODEright(step);
     }
-    return step;
+    return NULL;
     
     
     //return findBSTrecurse(t, t->root, value);
@@ -160,6 +160,10 @@ BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
 BSTNODE *deleteBST(BST *t,void *value)
 {
     BSTNODE * delNode = findBST(t,value);
+    
+    if(t->size == 0)
+        return NULL;
+    
     if(delNode == NULL)
         return NULL;
     
@@ -208,11 +212,11 @@ BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)
     
     if(getBSTNODEright(node) != NULL)
     {
-        step = getBSTNODEright(node); //Go left once
+        step = getBSTNODEright(node); //Go right once
     
         while(getBSTNODEleft(step) != NULL)
         {
-            step = getBSTNODEleft(step); // Then go all the way right
+            step = getBSTNODEleft(step); // Then go all the way left
         }
     }
     else
@@ -230,7 +234,10 @@ BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)
 
 void    pruneLeafBST(BST *t,BSTNODE *leaf)
 {
+
     BSTNODE * parent = getBSTNODEparent(leaf);
+    if(parent == NULL)
+        return;
     sizeBST(t); //Stops error complain of unused var
     if(getBSTNODEleft(parent) == leaf)
     {
@@ -313,6 +320,50 @@ void    displayBSTdebug(BST *t,FILE *fp)
     freeQUEUE(queue);
 }
 
+void displayBSTdecorated(BST * t, FILE * fp)
+{
+    QUEUE * queue = newQUEUE(t->display, t->free);
+    enqueue(queue,t->root); //put root into queue to start things off
+    int level = 0;
+    int printLevel = 0;
+    while(sizeQUEUE(queue) > 0)
+    {
+        level = sizeQUEUE(queue); //get queue size for newline
+        fprintf(fp,"%d: ",printLevel);
+        while(level > 0)
+        {
+            BSTNODE * node = (BSTNODE*)dequeue(queue);
+            if(getBSTNODEleft(node) == NULL && getBSTNODEright(node) == NULL) //display = if leaf
+                fprintf(fp,"=");
+            
+            
+            t->display(getBSTNODEvalue(node), fp);
+            fprintf(fp,"(");
+            t->display(getBSTNODEvalue(getBSTNODEparent(node)), fp);
+            fprintf(fp, ")");
+            
+            if(t->root == node)
+                fprintf(fp,"X");
+            else if(getBSTNODEleft(getBSTNODEparent(node)) == node)
+                fprintf(fp,"L");
+            else if(getBSTNODEright(getBSTNODEparent(node)) == node)
+                fprintf(fp,"R");
+            
+            fflush(stdout);
+            if(level > 1)
+                fprintf(fp, " ");
+            if(getBSTNODEleft(node) != NULL)
+                enqueue(queue, getBSTNODEleft(node) ); //add left into queue
+            if(getBSTNODEright(node) != NULL)
+                enqueue(queue, getBSTNODEright(node) ); //add right into queue
+            
+            level--;
+        }
+        printLevel++;
+        fprintf(fp,"\n");
+    }
+    freeQUEUE(queue);
+}
 void freeBST(BST *t)
 {
    freeBSTrecurse(t, t->root);
@@ -324,7 +375,7 @@ void freeBSTrecurse(BST * bst,BSTNODE *node)
         return;
     freeBSTrecurse(bst, getBSTNODEleft(node));
     freeBSTrecurse(bst, getBSTNODEright(node));
-    bst->free(getBSTNODEvalue(node));
+    //bst->free(getBSTNODEvalue(node));
 }
 
 void genericSwapper(BSTNODE * a, BSTNODE * b)

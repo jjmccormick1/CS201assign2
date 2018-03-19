@@ -32,6 +32,8 @@ int main (void)
     deleteBST(bst, &num[3]);
     printf("Printing displayBSTdebug() after deletes\n");
     displayBSTdebug(bst,stdout);
+    printf("\nPrinting DisplayBSTdecorated() \n");
+    displayBSTdecorated(bst, stdout);
     printf("\n");
     freeBST(bst);
 }

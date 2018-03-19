@@ -88,9 +88,9 @@ void * removeSLL(SLL *items,int index)
 
     NODE * current = items->head; //Make a couple temp
         
-    for(int i = 1; i < items->size; i++) //dont start at front so current lags by one
+    for(int i = 1; i < items->size; i++) 
     {
-        if(i == index-1)
+        if(i == index)
         {
                 NODE * temp = getNODEnext(current);
                 void * val = getNODEvalue(temp);
@@ -111,6 +111,9 @@ void unionSLL(SLL *recipient,SLL *donor)
     setNODEnext(recipient->tail,donor->head);
     recipient->tail = donor->tail;
     recipient->size += donor->size;
+    donor->head = NULL;
+    donor->tail = NULL;
+    donor->size = 0;
     return;
 }
 
@@ -158,6 +161,8 @@ void displaySLL(SLL *items,FILE * fp)
     {
             items->display(getNODEvalue(current), fp);
             current = getNODEnext(current);
+            if(i < items->size-1)
+                fprintf(fp,",");
     }
     printf("}");
     return;
@@ -167,12 +172,14 @@ void displaySLLdebug(SLL *items,FILE * fp)
 {
     NODE * current = items->head;
     printf("head->{"); 
-    for(int i = 0; i < items->size -1 && items->size > 0; i++)
+    for(int i = 0; i < items->size  && items->size > 0; i++)
     {
             items->display(getNODEvalue(current), fp);
             current = getNODEnext(current);
+            if(i < items->size-1)
+                fprintf(fp,",");
     }
-    printf("}, tail->{");
+    printf("},tail->{");
     if(items->size > 0)
         items->display(getNODEvalue(items->tail),fp);
     printf("}");
@@ -191,4 +198,64 @@ void freeSLL(SLL *items)
     free(items);
     return;
 }
+/////////////////////////
+//node.c here for privacy
+/////////////////////////
+
+//node.c included here for privacy
+struct node
+    {
+    void *value;
+    NODE *next;
+    NODE *prev;
+    };
+
+/*************** public interface *************/
+
+/* constructors */
+
+NODE *
+newNODE(void *v,NODE *n)
+    {
+    NODE *p = malloc(sizeof(NODE));
+    if (p == 0) { fprintf(stderr,"out of memory\n"); exit(1); }
+    p->value = v;
+    p->next = n;
+    p->prev = NULL;
+    return p;
+    }
+
+/* accessors */
+
+void  *getNODEvalue(NODE *n) { return n->value; }
+NODE  *getNODEnext(NODE *n)  { return n->next; }
+NODE  *getNODEprev(NODE *n)  { return n->prev; }
+
+/* mutators */
+void setNODEprev(NODE *n, NODE *p)  { n->prev = p; }
+void  setNODEvalue(NODE *n,void *v) { n->value = v; }
+void  setNODEnext(NODE *n,NODE *p)  { n->next = p; }
+
+/* visualizers */
+
+void displayNODE(NODE *n,FILE *fp,void (*d)(FILE *,void *))
+    {
+    fprintf(fp,"[[");
+    d(fp,n->value);
+    fprintf(fp,"]]");
+    }
+
+void displayNODEdebug(NODE *n,FILE *fp,void (*d)(FILE *,void *))
+    {
+    fprintf(fp,"[[");
+    d(fp,n->value);
+    fprintf(fp,"@%p->%p]]",(void *)n,(void *)n->next);
+    }
+
+void
+freeNODE(NODE *n,void (*release)(void *))
+    {
+    if (release != 0) release(n->value);
+    free(n);
+    }
 

@@ -1,11 +1,18 @@
-CC=clang
-CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 -O0
-LFLAGS=  -Wall -Wextra  -std=c99 -ggdb -O0
+CC=gcc
+CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 
+LFLAGS=  -Wall -Wextra  -std=c99 -ggdb 
 
 all: trees.o
 
 integer.o: 
 	$(CC) $(CFLAGS) integer.c integer.h
+
+sll.o: 
+	$(CC) $(CFLAGS) sll.c sll.h
+slltest.o: sll.o
+	$(CC) $(CFLAGS) sll-0-200.c
+slltest: slltest.o integer.o
+	$(CC) $(LFLAGS) integer.o sll.o sll-0-200.o -o slltest
 
 queue.o:
 	$(CC) $(CFLAGS) queue.c queue.h 
@@ -43,27 +50,32 @@ trees.o: gst.o
 
 
 
-test:  gsttest  bsttest queuetest
+test: slltest gsttest  bsttest queuetest
+	@echo "TESTING SLL WITH LUSTHS TESTER\n"
+	@./slltest
 	@echo "TESTING QUEUE WITH LUSTHS TESTER"
 	@./queuetestnew
 	@echo "\nTESTING QUEUE WITH MY TESTER"
 	@./queuetest
-	@echo "\nTESTING BST WITH LUSTHS TESTER"	
-	@./bsttestnew
-	@echo "\nTESTING BST WITH MY TESTER"
+	@echo "\nTESTING BST WITH MY TESTER"	
 	@./bsttest
-	@echo "\n"
+	@echo "\nTESTING BST WITH LUSTHS TESTER"
+	@./bsttestnew
+	@echo "\nTESTING GST WITH MY TESTER\n"
 	@./gsttest
-	@echo "\n"
+	@echo "\nTESTING GST WITH LUSTHS TESTER\n"
 	@./gsttestnew
 
-valgrind: test
+valgrind: slltest queuetest bsttest gsttest
+	@valgrind slltest
 	@valgrind queuetestnew
 	@valgrind bsttestnew
+	@valgrind gsttestnew
 
 clean:
 	@rm -rf *.o
 	@rm -rf *.gch
+	@rm -rf slltest
 	@rm -rf bsttest
 	@rm -rf queuetest
 	@rm -rf gsttest
