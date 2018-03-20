@@ -96,6 +96,7 @@ void * removeSLL(SLL *items,int index)
                 void * val = getNODEvalue(temp);
                 setNODEnext(current,getNODEnext(temp));
                 setNODEnext(temp,temp);
+                free(temp);
                 items->size -= 1;
                 return val;
         }
@@ -114,6 +115,7 @@ void unionSLL(SLL *recipient,SLL *donor)
     donor->head = NULL;
     donor->tail = NULL;
     donor->size = 0;
+    free(donor);
     return;
 }
 
@@ -192,8 +194,10 @@ void freeSLL(SLL *items)
     for(int i = 0; i < items->size; i++)
     {
             NODE * temp = getNODEnext(current);
-            items->free(current);
+            //items->free(current);
+            freeNODE(current,items->free);
             current = temp;
+            //free(temp);
     }
     free(items);
     return;

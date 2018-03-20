@@ -105,7 +105,7 @@ BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
             setBSTNODEparent(newNode, root);
             return newNode;
         }
-        if(cmp <= 0 && getBSTNODEright(root) == NULL) //if its more and the sport is empty
+        if(cmp < 0 && getBSTNODEright(root) == NULL) //if its more and the sport is empty
         {
             setBSTNODEright(root, newNode);
             setBSTNODEparent(newNode, root);
@@ -113,7 +113,7 @@ BSTNODE *insertBSTrecurse(BST* t,BSTNODE *root, BSTNODE * newNode, void *value)
         }
         if(cmp > 0 && getBSTNODEleft(root) != NULL) //recure if spot isnt empty
                 insertBSTrecurse(t,getBSTNODEleft(root),newNode, value);
-        if(cmp <= 0 && getBSTNODEright(root) != NULL) //recurse if not empty
+        if(cmp < 0 && getBSTNODEright(root) != NULL) //recurse if not empty
                 insertBSTrecurse(t,getBSTNODEright(root),newNode, value);
         return NULL;
         
@@ -235,6 +235,7 @@ BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)
         }
     }
     t->swapper(node, step); //Swap the nodees
+    //setBSTNODEvalue(node, getBSTNODEvalue(step));
     return step;
 }
 
@@ -270,16 +271,16 @@ void    statisticsBST(BST *t,FILE *fp)
 
 int maxHeightBST(BSTNODE *node)
 {
-  if (!node) return 0;
-  int lefth = maxHeightBST(node->left);
-  int righth = maxHeightBST(node->right);
+  if (node == NULL) return 0;
+  int lefth = maxHeightBST(getBSTNODEleft(node));
+  int righth = maxHeightBST(getBSTNODEright(node));
   return (lefth > righth) ? lefth + 1 : righth + 1;
 }
 int minHeightBST(BSTNODE *node)
 {
-  if (!node) return 0;
-  int lefth = maxHeightBST(node->left);
-  int righth = maxHeightBST(node->right);
+  if (node == NULL) return 0;
+  int lefth = maxHeightBST(getBSTNODEleft(node));
+  int righth = maxHeightBST(getBSTNODEright(node));
   return (lefth < righth) ? lefth + 1 : righth + 1;
 }
 
@@ -287,6 +288,7 @@ void    displayBST(BST *t,FILE *fp)
 {
     preorder(t,t->root,fp);
 }
+
 void preorder(BST *t, BSTNODE * node, FILE * fp)
 {
     fprintf(fp,"[");
@@ -381,7 +383,8 @@ void freeBSTrecurse(BST * bst,BSTNODE *node)
         return;
     freeBSTrecurse(bst, getBSTNODEleft(node));
     freeBSTrecurse(bst, getBSTNODEright(node));
-    //bst->free(getBSTNODEvalue(node));
+    bst->free(getBSTNODEvalue(node));
+    free(node);
 }
 
 void genericSwapper(BSTNODE * a, BSTNODE * b)

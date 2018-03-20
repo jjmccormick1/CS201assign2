@@ -132,7 +132,7 @@ void *deleteGST(GST * gst,void * value)
         gstfound->frequency--;
     else if(gstfound->frequency == 1)
         deleteBST(gst->bst, gstval);
-    //free(gstval);
+    free(gstval);
     return gstfound->value;
 }
 

@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 
-LFLAGS=  -Wall -Wextra  -std=c99 -ggdb 
+CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 -Og 
+LFLAGS=  -Wall -Wextra  -std=c99 -ggdb  -Og 
 
 all: trees.o
 
@@ -44,8 +44,9 @@ gsttest: gsttest.o integer.o
 avl.o: bst.o
 	$(CC) $(CFLAGS) avl.c avl.h
 
-trees.o: gst.o  
+trees.o: gst.o  avl.o
 	$(CC) $(CFLAGS) trees.c
+treees:
 	$(CC) $(LFLAGS) queue.o bst.o gst.o avl.o trees.o -o trees
 
 
