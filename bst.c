@@ -286,6 +286,9 @@ int minHeightBST(BSTNODE *node)
 
 void    displayBST(BST *t,FILE *fp)
 {
+    if(t->root == NULL)
+        return;
+    
     preorder(t,t->root,fp);
 }
 
@@ -303,6 +306,11 @@ void preorder(BST *t, BSTNODE * node, FILE * fp)
 
 void    displayBSTdebug(BST *t,FILE *fp)
 {
+     if(sizeBST(t) == 0)
+    {
+        fprintf(fp,"EMPTY");
+        return;
+    }
     QUEUE * queue = newQUEUE(t->display, t->free);
     enqueue(queue,t->root); //put root into queue to start things off
     int level = 0;
@@ -330,6 +338,11 @@ void    displayBSTdebug(BST *t,FILE *fp)
 
 void displayBSTdecorated(BST * t, FILE * fp)
 {
+    if(sizeBST(t) == 0 || t->root == NULL)
+    {
+        fprintf(fp,"EMPTY");
+        return;
+    }
     QUEUE * queue = newQUEUE(t->display, t->free);
     enqueue(queue,t->root); //put root into queue to start things off
     int level = 0;
