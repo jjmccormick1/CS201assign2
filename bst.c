@@ -159,7 +159,7 @@ BSTNODE *findBSTrecurse(BST *t, BSTNODE *node, void * value)
 
 BSTNODE *deleteBST(BST *t,void *value)
 {
-    BSTNODE * delNode = findBST(t,value);
+   BSTNODE * delNode = findBST(t,value);
     
     if(t->size == 0)
         return NULL;
@@ -167,44 +167,55 @@ BSTNODE *deleteBST(BST *t,void *value)
     if(delNode == NULL)
         return NULL;
     
-    if(getBSTNODEleft(delNode) == NULL && getBSTNODEright(delNode) == NULL) // case 1 - node is a leaf
+    if(getBSTNODEleft(delNode) != NULL && getBSTNODEright(delNode) != NULL) // Node has 2 children
     {
-        pruneLeafBST(t, delNode);
+        BSTNODE * swapped = swapToLeafBST(t, delNode);
+        deleteBST(t, getBSTNODEvalue(swapped));
     }
-    
-    else if(getBSTNODEleft(delNode) == NULL && getBSTNODEright(delNode) != NULL ) //Case 2 - node has on child, right in this case
-    {
-
-            
-        BSTNODE * child = getBSTNODEright(delNode);
-        BSTNODE * parent = getBSTNODEparent(delNode);
-        
-        if(getBSTNODEleft(parent) == delNode)
-            setBSTNODEleft(parent, child);
-        else
-            setBSTNODEright(parent, child);
-        setBSTNODEparent(child, parent);
-    }
-    else if(getBSTNODEleft(delNode) != NULL && getBSTNODEright(delNode) == NULL ) //Case 2 - node has on child, left in this case
+    else if(getBSTNODEleft(delNode) != NULL) //Node has 1 child, left
     {
         BSTNODE * child = getBSTNODEleft(delNode);
         BSTNODE * parent = getBSTNODEparent(delNode);
-        
-        if(getBSTNODEleft(parent) == delNode)
-            setBSTNODEleft(parent, child);
+        if(delNode == t->root) //If root simply set root to child node
+        {
+            setBSTroot(t, child);
+            setBSTNODEparent(child, child);
+        }
         else
-            setBSTNODEright(parent, child);
-        
-       setBSTNODEparent(child, parent);
-        
+        {
+            if(getBSTNODEleft(parent) == delNode) //Setting parents pointer to new child 
+                setBSTNODEleft(parent,child);
+            else
+                setBSTNODEright(parent, child);
+            setBSTNODEparent(child, parent); //set childs new parent
+        }
     }
-    else                // Case 3, 2 children. Swap with predecessor and delete
+    else if(getBSTNODEright(delNode) != NULL)// Node has one child, right
     {
-        BSTNODE * leaf = swapToLeafBST(t,delNode);
-        deleteBST(t, getBSTNODEvalue(leaf));
+        BSTNODE * child = getBSTNODEright(delNode);
+        BSTNODE * parent = getBSTNODEparent(delNode);
+        if(delNode == t->root) //If root simply set root to child node
+        {
+            setBSTroot(t, child);
+            setBSTNODEparent(child, child);
+        }
+        else
+        {
+            if(getBSTNODEleft(parent) == delNode) //Setting parents pointer to new child node
+                setBSTNODEleft(parent,child);
+            else
+                setBSTNODEright(parent, child);
+            setBSTNODEparent(child, parent);
+        }
     }
-    //freeBSTNODE(delNode, t->free);
-    t->size -= 1; //decrement size
+    else
+    {
+        if(t->root == delNode) //Root node with no children is last node, set pointer to NULL
+            t->root = NULL; 
+        else
+            pruneLeafBST(t, delNode);
+    }
+    t->size -= 1;
     return delNode;
 }
 
@@ -273,14 +284,14 @@ void    statisticsBST(BST *t,FILE *fp)
 
 int maxHeightBST(BSTNODE *node)
 {
-  if (node == NULL) return 0;
+  if (node == NULL) return -1;
   int lefth = maxHeightBST(getBSTNODEleft(node));
   int righth = maxHeightBST(getBSTNODEright(node));
   return (lefth > righth) ? lefth + 1 : righth + 1;
 }
 int minHeightBST(BSTNODE *node)
 {
-  if (node == NULL) return 0;
+  if (node == NULL) return -1;
   int lefth = maxHeightBST(getBSTNODEleft(node));
   int righth = maxHeightBST(getBSTNODEright(node));
   return (lefth < righth) ? lefth + 1 : righth + 1;
@@ -288,31 +299,30 @@ int minHeightBST(BSTNODE *node)
 
 void    displayBST(BST *t,FILE *fp)
 {
-    if(t->root == NULL)
+    if(t->size == 0)
+    {
+        fprintf(fp, "[]");
         return;
-    
+    }
     preorder(t,t->root,fp);
 }
 
 void preorder(BST *t, BSTNODE * node, FILE * fp)
 {
     fprintf(fp,"[");
-        t->display(getBSTNODEvalue(node), fp);
+            t->display(getBSTNODEvalue(node), fp);
         
-        if(getBSTNODEleft(node) != NULL)
-            preorder(t, getBSTNODEleft(node), fp);
-        if(getBSTNODEright(node) != NULL)
-            preorder(t, getBSTNODEright(node), fp);
+            if(getBSTNODEleft(node) != NULL)
+                preorder(t, getBSTNODEleft(node), fp);
+            if(getBSTNODEright(node) != NULL)
+                preorder(t, getBSTNODEright(node), fp);
         fprintf(fp,"]");
 }
 
 void    displayBSTdebug(BST *t,FILE *fp)
 {
-     if(sizeBST(t) == 0)
-    {
-        fprintf(fp,"EMPTY");
+    if(t->root == NULL)
         return;
-    }
     QUEUE * queue = newQUEUE(t->display, t->free);
     enqueue(queue,t->root); //put root into queue to start things off
     int level = 0;

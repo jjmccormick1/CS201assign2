@@ -28,7 +28,7 @@ int main (void)
     printf("Printing displayBSTdebug()\n");
     displayBSTdebug(bst,stdout);
     printf("\n");
-    free(deleteBST(bst, &num[0]));
+    deleteBST(bst, &num[0]);
     //deleteBST(bst, &num[1]);
     deleteBST(bst, &num[2]);
     //deleteBST(bst, &num[3]);

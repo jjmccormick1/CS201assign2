@@ -3,8 +3,7 @@
 #include "bst.h"
 #include "gst.h"
 #include "integer.h"
-//#include "real.h"
-//#include "string.h"
+
 
 void srandom(unsigned int);
 long int random(void);
@@ -12,11 +11,12 @@ long int random(void);
 int
 main(void)
     {
-    srandom(1);
+    srandom(41);
     //simple INTEGER test of GST
     GST *p = newGST(displayINTEGER,compareINTEGER,freeINTEGER);
     insertGST(p,newINTEGER(3));
     insertGST(p,newINTEGER(2));
+    insertGST(p,newINTEGER(1));
     printf("GST:\n");
     displayGST(p,stdout);
     printf("debug: ");

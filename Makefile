@@ -1,4 +1,4 @@
-CC=gcc-7
+CC=gcc
 CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 -Og 
 LFLAGS=  -Wall -Wextra  -std=c99 -ggdb  -Og
 
@@ -10,27 +10,27 @@ integer.o:
 sll.o: 
 	$(CC) $(CFLAGS) sll.c sll.h
 slltest.o: sll.o
-	$(CC) $(CFLAGS) sll-0-200.c
+	$(CC) $(CFLAGS) sll-0-40.c
 slltest: slltest.o integer.o
-	$(CC) $(LFLAGS) integer.o sll.o sll-0-200.o -o slltest
+	$(CC) $(LFLAGS) integer.o sll.o sll-0-40.o -o slltest
 
 queue.o:
 	$(CC) $(CFLAGS) queue.c queue.h 
 queuetest.o: queue.o
 	$(CC) $(CFLAGS) queuetest.c
-	$(CC) $(CFLAGS) queue-0-200.c
+	$(CC) $(CFLAGS) queue-0-40.c
 queuetest: queuetest.o bst.o integer.o
 	$(CC) $(LFLAGS) bst.o  queue.o queuetest.o  -o queuetest
-	$(CC) $(LFLAGS) integer.o bst.o queue.o queue-0-200.o -o queuetestnew
+	$(CC) $(LFLAGS) integer.o bst.o queue.o queue-0-40.o -o queuetestnew
 
 bst.o:  queue.o
 	$(CC) $(CFLAGS)  bst.c bst.h
 bsttest.o: bst.o
 	$(CC) $(CFLAGS) bsttest.c
-	$(CC) $(CFLAGS) bst-0-200.c
+	$(CC) $(CFLAGS) bst-0-0.c
 bsttest:  bsttest.o integer.o
 	$(CC) $(LFLAGS)  queue.o bst.o bsttest.o -o bsttest
-	$(CC) $(LFLAGS) integer.o  queue.o bst.o bst-0-200.o -o bsttestnew	
+	$(CC) $(LFLAGS) integer.o  queue.o bst.o bst-0-0.o -o bsttestnew	
 
 gst.o: bst.o
 	$(CC) $(CFLAGS) gst.c gst.h
