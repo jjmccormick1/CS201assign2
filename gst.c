@@ -94,8 +94,8 @@ void insertGST(GST * gst,void * value)
         insertBST(gst->bst, gstval);
         return;
     }
-    gstval = getBSTNODEvalue(found); //if is in tree, increment frequency
-    gstval->frequency += 1; 
+    GSTVALUE * gstfound = getBSTNODEvalue(found); //if is in tree, increment frequency
+    gstfound->frequency += 1; 
     freeGSTVALUE(gstval);
 }
 int findGSTcount(GST * gst,void * value)
@@ -153,6 +153,7 @@ int duplicates(GST * gst)
 
 void statisticsGST(GST *gst,FILE * fp)
 {
+    fprintf(fp,"Duplicates: %d\n", duplicates(gst) );
     statisticsBST(gst->bst, fp);
 }
 
@@ -163,7 +164,7 @@ void displayGST(GST * gst,FILE * fp)
 
 void displayGSTdebug(GST *gst,FILE * fp)
 {
-    displayBSTdebug(gst->bst, fp);
+    displayBST(gst->bst, fp);
 }
 
 void freeGST(GST * gst)

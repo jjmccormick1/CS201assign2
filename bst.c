@@ -309,13 +309,17 @@ void    displayBST(BST *t,FILE *fp)
 
 void preorder(BST *t, BSTNODE * node, FILE * fp)
 {
+
     fprintf(fp,"[");
             t->display(getBSTNODEvalue(node), fp);
-        
             if(getBSTNODEleft(node) != NULL)
+            {
+                fprintf(fp, " ");
                 preorder(t, getBSTNODEleft(node), fp);
+            }
             if(getBSTNODEright(node) != NULL)
                 preorder(t, getBSTNODEright(node), fp);
+
         fprintf(fp,"]");
 }
 

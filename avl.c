@@ -10,6 +10,8 @@ void freeAVLVALUE(void *);
 void setBalance(BSTNODE *);
 void insertionFixup(BSTNODE *);
 
+int numInsert = 0;
+
 struct avl {
     BST * bst;
     void (*display)(void *, FILE *);
@@ -57,9 +59,19 @@ void printAVL(void * in,FILE * fp)
         AVLVALUE * avlval = in;
         avlval->display(avlval->value, fp);
 }
-void insertAVL(AVL *,void *)
+void insertAVL(AVL * avl,void * value)
 {
-    
+    AVLVALUE * avlval = newAVLVALUE(gst, value); //make a new gstval for comparison
+    BSTNODE * found = findBST(avl->bst, avlval); //pass it as the value instead of raw val
+    numInsert++;
+    if(found == NULL) //if not in tree, add it
+    {
+        insertBST(avl->bst, avlval);
+        return;
+    }
+    AVLVALUE * avlfound = getBSTNODEvalue(found); //if is in tree, increment frequency
+    avlfound->frequency += 1; 
+    freeAVLVALUE(avlval);
 }
 int findAVLcount(AVL *,void *)
 {
