@@ -115,7 +115,7 @@ void unionSLL(SLL *recipient,SLL *donor)
     donor->head = NULL;
     donor->tail = NULL;
     donor->size = 0;
-    free(donor);
+    //free(donor);
     return;
 }
 
@@ -159,9 +159,10 @@ void displaySLL(SLL *items,FILE * fp)
 {
     NODE * current = items->head;
     printf("{");
-    for(int i = 0; i < items->size; i++)
-    {
-            items->display(getNODEvalue(current), fp);
+    for(int i = 0; i < items->size && items->size > 0; i++)
+    {  
+            if(current != NULL)
+                items->display(getNODEvalue(current), fp);
             current = getNODEnext(current);
             if(i < items->size-1)
                 fprintf(fp,",");
@@ -176,7 +177,8 @@ void displaySLLdebug(SLL *items,FILE * fp)
     printf("head->{"); 
     for(int i = 0; i < items->size  && items->size > 0; i++)
     {
-            items->display(getNODEvalue(current), fp);
+            if(current != NULL)
+                items->display(getNODEvalue(current), fp);
             current = getNODEnext(current);
             if(i < items->size-1)
                 fprintf(fp,",");
@@ -192,12 +194,10 @@ void freeSLL(SLL *items)
     
     NODE * current = items->head;
     for(int i = 0; i < items->size; i++)
-    {
+    {       
             NODE * temp = getNODEnext(current);
-            //items->free(current);
             freeNODE(current,items->free);
             current = temp;
-            //free(temp);
     }
     free(items);
     return;

@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 -Og 
-LFLAGS=  -Wall -Wextra  -std=c99 -ggdb  -Og 
+LFLAGS=  -Wall -Wextra  -std=c99 -ggdb  -Og
 
 all: trees.o
 

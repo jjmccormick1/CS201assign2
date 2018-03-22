@@ -64,7 +64,7 @@ BST *newBST( void (*display)(void *,FILE *),int (*compare)(void *,void *), void 
     bst->display = display;
     
     if(swapper == NULL || swapper == 0)
-        bst->swapper = &genericSwapper;
+        bst->swapper = genericSwapper;
     else
         bst->swapper = swapper;
     bst->compare = compare;
@@ -174,6 +174,8 @@ BSTNODE *deleteBST(BST *t,void *value)
     
     else if(getBSTNODEleft(delNode) == NULL && getBSTNODEright(delNode) != NULL ) //Case 2 - node has on child, right in this case
     {
+
+            
         BSTNODE * child = getBSTNODEright(delNode);
         BSTNODE * parent = getBSTNODEparent(delNode);
         
@@ -199,7 +201,7 @@ BSTNODE *deleteBST(BST *t,void *value)
     else                // Case 3, 2 children. Swap with predecessor and delete
     {
         BSTNODE * leaf = swapToLeafBST(t,delNode);
-        pruneLeafBST(t,leaf);
+        deleteBST(t, getBSTNODEvalue(leaf));
     }
     //freeBSTNODE(delNode, t->free);
     t->size -= 1; //decrement size

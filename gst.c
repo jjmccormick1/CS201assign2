@@ -58,6 +58,10 @@ void swapperGST(BSTNODE * a, BSTNODE * b)
     void * tmp = gsta->value;
     gsta->value = gstb->value;
     gstb->value = tmp;
+    
+    int tempint = gsta->frequency;
+    gsta->frequency = gstb->frequency;
+    gstb->frequency = tempint;
 }
 
 int compareGST(void * a, void * b)
