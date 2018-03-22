@@ -124,12 +124,13 @@ void *findGST(GST * gst,void * value)
 void *deleteGST(GST * gst,void * value)
 {
     GSTVALUE * gstval = newGSTVALUE(gst, value); //Make value for comparison
-    numInsert--;
+
     BSTNODE * found = findBST(gst->bst, gstval);//Look for value in BST
     
     if(found == NULL)//If not found return NULL
         return NULL;
     
+    numInsert--;
     GSTVALUE * gstfound = getBSTNODEvalue(found);
     
     if(gstfound->frequency > 1)

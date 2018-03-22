@@ -1,4 +1,4 @@
-CC=gcc
+CC=gcc-7
 CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 -Og 
 LFLAGS=  -Wall -Wextra  -std=c99 -ggdb  -Og
 
