@@ -21,6 +21,7 @@ struct sll
 SLL *newSLL(void (*d)(void *,FILE *),void (*f)(void *))
 {
         SLL *items = malloc(sizeof(SLL));
+        assert(items != NULL);
         assert(items != 0);
         items->head = 0;
         items->tail = 0;
@@ -79,9 +80,11 @@ void * removeSLL(SLL *items,int index)
 {   
     if(index == 0) //remove at front
     {
+        NODE * temp = items->head;
         void * val = getNODEvalue(items->head);
         items->head = getNODEnext(items->head);
-            items->size -= 1;
+        items->size -= 1;
+        free(temp);
         return val;
     }
 
@@ -191,7 +194,7 @@ void displaySLLdebug(SLL *items,FILE * fp)
 void freeSLL(SLL *items)
 {
     
-    NODE * current = items->head;
+    /*NODE * current = items->head;
     for(int i = 0; i < items->size; i++)
     {       
             NODE * temp = getNODEnext(current);
@@ -199,7 +202,17 @@ void freeSLL(SLL *items)
             current = temp;
     }
     free(items);
-    return;
+    return;*/
+    NODE * current = items->head;
+    while(current != NULL)
+    {
+        NODE * temp = current;
+        current = getNODEnext(current);
+        freeNODE(temp, items->free);
+    }
+    items->head = NULL;
+    items->tail = NULL;
+    free(items);
 }
 /////////////////////////
 //node.c here for privacy

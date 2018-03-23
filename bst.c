@@ -43,7 +43,7 @@ void    setBSTNODEparent(BSTNODE *n,BSTNODE *replacement) {n->parent = replaceme
 void    freeBSTNODE(BSTNODE *n,void (*infree)(void *))
 {
         infree(n->value);
-        //free(n);
+        free(n);
 }
 
 struct bst
