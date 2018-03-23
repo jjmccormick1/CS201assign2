@@ -170,7 +170,7 @@ BSTNODE *deleteBST(BST *t,void *value)
     if(getBSTNODEleft(delNode) != NULL && getBSTNODEright(delNode) != NULL) // Node has 2 children
     {
         BSTNODE * swapped = swapToLeafBST(t, delNode);
-        deleteBST(t, getBSTNODEvalue(swapped));
+        pruneLeafBST(t,swapped);
     }
     else if(getBSTNODEleft(delNode) != NULL) //Node has 1 child, left
     {
@@ -248,8 +248,10 @@ BSTNODE *swapToLeafBST(BST *t,BSTNODE *node)
         }
     }
     t->swapper(node, step); //Swap the nodees
-    //setBSTNODEvalue(node, getBSTNODEvalue(step));
-    return step;
+    if(getBSTNODEleft(step) != NULL || getBSTNODEright(step) != NULL)
+        return swapToLeafBST(t, step);
+    else
+        return step;
 }
 
 void    pruneLeafBST(BST *t,BSTNODE *leaf)
