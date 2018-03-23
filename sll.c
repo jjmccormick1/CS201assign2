@@ -115,7 +115,6 @@ void unionSLL(SLL *recipient,SLL *donor)
     donor->head = NULL;
     donor->tail = NULL;
     donor->size = 0;
-    //free(donor);
     return;
 }
 
