@@ -361,7 +361,7 @@ void displayBSTdecorated(BST * t, FILE * fp)
         fprintf(fp,"EMPTY");
         return;
     }
-    QUEUE * queue = newQUEUE(t->display, t->free);
+    QUEUE * queue = newQUEUE(t->display, NULL);
     enqueue(queue,t->root); //put root into queue to start things off
     int level = 0;
     int printLevel = 0;

@@ -27,10 +27,10 @@ bst.o:  queue.o
 	$(CC) $(CFLAGS)  bst.c bst.h
 bsttest.o: bst.o
 	$(CC) $(CFLAGS) bsttest.c
-	$(CC) $(CFLAGS) bst-0-0.c
+	$(CC) $(CFLAGS) bst-0-200.c
 bsttest:  bsttest.o integer.o
 	$(CC) $(LFLAGS)  queue.o bst.o bsttest.o -o bsttest
-	$(CC) $(LFLAGS) integer.o  queue.o bst.o bst-0-0.o -o bsttestnew	
+	$(CC) $(LFLAGS) integer.o  queue.o bst.o bst-0-200.o -o bsttestnew	
 
 gst.o: bst.o
 	$(CC) $(CFLAGS) gst.c gst.h

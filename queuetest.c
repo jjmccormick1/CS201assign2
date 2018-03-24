@@ -27,6 +27,7 @@ int main (void)
     void * out = dequeue(queue);
     printf("printing removed value\n");
     displayInt(out, stdout);
+    freeBSTNODE(out, freeInt);
     printf("\n");
     freeQUEUE(queue);
 }
@@ -41,5 +42,5 @@ void displayInt(void * in, FILE * fp)
 
 void freeInt(void * in)
 {
-    free(in);
+    (void)(in);
 }
