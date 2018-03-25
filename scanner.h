@@ -5,7 +5,7 @@
  * scanner.h - public interface to scanner.c, the scanner module
  *
  */
-
+#include<stdio.h>
 extern int readInt(FILE *);
 extern double readReal(FILE *);
 extern char readChar(FILE *);

@@ -2,8 +2,10 @@ CC=gcc
 CFLAGS=  -Wall -Wextra -c -ggdb  -std=c99 -Og 
 LFLAGS=  -Wall -Wextra  -std=c99 -ggdb  -Og
 
-all: trees.o
+all: trees
 
+scanner.o:
+	$(CC) $(CFLAGS) scanner.c scanner.h
 integer.o: 
 	$(CC) $(CFLAGS) integer.c integer.h
 
@@ -46,8 +48,8 @@ avl.o: bst.o
 
 trees.o: gst.o  avl.o
 	$(CC) $(CFLAGS) trees.c
-treees:
-	$(CC) $(LFLAGS) queue.o bst.o gst.o avl.o trees.o -o trees
+trees: trees.o scanner.o gst.o avl.o bst.o queue.o
+	$(CC) $(LFLAGS) trees.o scanner.o queue.o bst.o gst.o avl.o -o trees
 
 
 

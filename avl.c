@@ -9,8 +9,7 @@ void swapperAVL(BSTNODE *, BSTNODE *);
 void freeAVLVALUE(void *);
 void setBalance(BSTNODE *);
 void insertionFixup(BSTNODE *);
-
-int numInsert = 0;
+int numInserted = 0;
 
 struct avl {
     BST * bst;
@@ -33,7 +32,7 @@ struct avlvalue {
 AVL *newAVL(void (*display)(void *,FILE *),int (*compare)(void *,void *),void (*free)(void *))
 {
     AVL * avl = malloc(sizeof(AVL));
-    avl->bst = newBST(printAVL, compareAVL, swapperAVL, freeAVLVALUE);
+    avl->bst = newBST(NULL, NULL, NULL, NULL);
     avl->display = display;
     avl->compare = compare;
     avl->free = free;
@@ -61,9 +60,9 @@ void printAVL(void * in,FILE * fp)
 }
 void insertAVL(AVL * avl,void * value)
 {
-    AVLVALUE * avlval = newAVLVALUE(gst, value); //make a new gstval for comparison
+    AVLVALUE * avlval = newAVLVALUE(avl, value); //make a new gstval for comparison
     BSTNODE * found = findBST(avl->bst, avlval); //pass it as the value instead of raw val
-    numInsert++;
+    numInserted++;
     if(found == NULL) //if not in tree, add it
     {
         insertBST(avl->bst, avlval);
@@ -71,43 +70,57 @@ void insertAVL(AVL * avl,void * value)
     }
     AVLVALUE * avlfound = getBSTNODEvalue(found); //if is in tree, increment frequency
     avlfound->frequency += 1; 
-    freeAVLVALUE(avlval);
+   // freeAVLVALUE(avlval);
 }
-int findAVLcount(AVL *,void *)
-{
-    
+int findAVLcount(AVL * avl,void * value)
+{   
+    AVLVALUE * avlval = newAVLVALUE(avl, value);
+    BSTNODE * found = findBST(avl->bst, avlval);
+    if(found == NULL)
+        return 0;
+    AVLVALUE * avlfound = getBSTNODEvalue(found);
+    return avlfound->frequency;
 }
-void *findAVL(AVL *,void *)
+void *findAVL(AVL * avl,void * value)
 {
-    
+    (void)avl;
+    (void)value;
+    return NULL;
 }
-void *deleteAVL(AVL *,void *)
+void *deleteAVL(AVL * avl,void * value)
 {
-    
+    (void)avl;
+    (void)value;
+    return NULL;
 }
-int sizeAVL(AVL *)
+int sizeAVL(AVL *avl)
 {
-    
+    (void)avl;
+    return 0;
 }
-int duplicatesAVL(AVL *)
+int duplicatesAVL(AVL * avl)
 {
-    
+    (void)avl;
+    return 0;
 }
-void statisticsAVL(AVL *,FILE *)
+void statisticsAVL(AVL * avl,FILE * fp)
 {
-    
+    (void)avl;
+    (void)fp;
 }
-void displayAVL(AVL *,FILE *)
+void displayAVL(AVL * avl,FILE * fp)
 {
-    
+        (void)avl;
+    (void)fp;
 }
-void displayAVLdebug(AVL *,FILE *)
+void displayAVLdebug(AVL * avl,FILE * fp)
 {
-    
+        (void)avl;
+    (void)fp;
 }
-void freeAVL(AVL *)
+void freeAVL(AVL * avl)
 {
-    
+    free(avl);
 }
 
 void insertionFixup(BSTNODE * in)
@@ -115,7 +128,7 @@ void insertionFixup(BSTNODE * in)
         BSTNODE * node = in;
     while(node != NULL)
     {
-        if(getBSTNODEparent == NULL) // If node is the root
+        if(getBSTNODEparent(node) == node) // If node is the root
         {
             break;
         }
@@ -123,8 +136,8 @@ void insertionFixup(BSTNODE * in)
         AVLVALUE * avlvalParent = getBSTNODEvalue(parent); // Get avlval of parent
         AVLVALUE * avlval = getBSTNODEvalue(node);
         int parentBF = avlvalParent->heightLeft - avlvalParent->heightRight;
-        
-        else if(avlvalParent->height - avlval->height > 1)
+        (void)parentBF;
+         if(avlvalParent->height - avlval->height > 1)
         {
             setBalance(parent);
             break;
@@ -136,7 +149,7 @@ void insertionFixup(BSTNODE * in)
             continue;
         }
         
-        
+    }  
 }
 
 void setBalance(BSTNODE * node)

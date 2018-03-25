@@ -280,8 +280,8 @@ int     sizeBST(BST *t)
 void    statisticsBST(BST *t,FILE *fp)
 {
     fprintf(fp, "Nodes: %d\n",sizeBST(t));
-    fprintf(fp, "Minimum Depth: %d\n",minHeightBST(t->root));
-    fprintf(fp, "Maximum Depth: %d\n",maxHeightBST(t->root));
+    fprintf(fp, "Minimum depth: %d\n",minHeightBST(t->root));
+    fprintf(fp, "Maximum depth: %d\n",maxHeightBST(t->root));
 }
 
 int maxHeightBST(BSTNODE *node)
