@@ -10,6 +10,8 @@ void freeAVLVALUE(void *);
 void setBalance(BSTNODE *);
 void insertionFixup(BSTNODE *);
 int numInserted = 0;
+int linear(BSTNODE * a, BSTNODE * b, BSTNODE * c);
+BSTNODE * sibling(BSTNODE * in);
 
 struct avl {
     BST * bst;
@@ -135,8 +137,7 @@ void insertionFixup(BSTNODE * in)
         BSTNODE * parent = getBSTNODEparent(node);
         AVLVALUE * avlvalParent = getBSTNODEvalue(parent); // Get avlval of parent
         AVLVALUE * avlval = getBSTNODEvalue(node);
-        int parentBF = avlvalParent->heightLeft - avlvalParent->heightRight;
-        (void)parentBF;
+
          if(avlvalParent->height - avlval->height > 1)
         {
             setBalance(parent);
@@ -148,10 +149,91 @@ void insertionFixup(BSTNODE * in)
             node = parent;
             continue;
         }
-        
+        else
+        {
+            BSTNODE * favChild = NULL;
+            if( avlval->heightLeft > avlval->heightLeft)
+                favChild = getBSTNODEleft(node);
+            else if( avlval->heightLeft < avlval->heightLeft)
+                favChild = getBSTNODEright(node);
+            
+            if(favChild != NULL && !(linear(parent, node, favChild) )
+            {
+                rotate(favChild, node);
+                rotate(favChild, parent);
+                setBalance(node);
+                setBalance(parent);
+                setBalance(favChild);
+            }
+            else
+            {
+                rotate(node, parent);
+                setBalance(parent);
+                setBalance(node);
+            }
+        }
     }  
 }
+void deletionFixup(BSTNODE * node)
+{
 
+    
+    while(getBSTNODEparent(node) != node)
+    {
+        AVLVALUE * avlval = getBSTNODEvalue(node);
+        avlval->height = 0;
+        BSTNODE * parent = getBSTNODEparent(node);
+        AVLVALUE * avlvalParent = getBSTNODEvalue(parent);
+        
+        if(avlvalParent->height - avlval->height == 1 && avlvalParent->heightLeft != avlvalParent->heightRight) // node is parents favorite
+        {
+            setBalance(parent);
+            node = parent;
+        }
+        else if(avlvalParent->heightLeft == avlvalParent->heightRight) //Parent has no favorite
+        {
+            setBalance(parent);
+            break;
+        }
+        else
+        {
+            BSTNODE * sibling = sibling(node);
+            AVLVALUE * avlSibling = getBSTNODEvalue(sibling);
+            BSTNODE * favChild = NULL;
+            if( avlSibling->heightLeft > avlSibling->heightLeft)
+                favChild = getBSTNODEleft(sibling);
+            else if( avlSibling->heightLeft < avlSibling->heightLeft)
+                favChild = getBSTNODEright(sibling);
+            
+            if(favChild != NULL && !linear(parent, sibling, favChild) )
+            {
+                rotate(favChild, sibling);
+                rotate(favChild, parent);
+                setBalance(parent);
+                setBalance(sibling);
+                setBalance(favChild);
+                node = favChild;
+            }
+            else
+            {
+                rotate(sibling, parent);
+                setBalance(sibling);
+                setBalance(parent);
+                if(favChild == NULL)
+                    break;
+                node = sibling;
+            }
+        }
+    }
+}
+int linear(BSTNODE * a, BSTNODE * b, BSTNODE * c)
+{
+    if(getBSTNODEleft(a) == b && getBSTNODEleft(b) == c)
+        return 1;
+    else if(getBSTNODEright(a) == b && getBSTNODEright(b) == c)
+        return 1;
+    return 0;
+}
 void setBalance(BSTNODE * node)
 {
     AVLVALUE * avlval = getBSTNODEvalue(node);
@@ -183,4 +265,16 @@ void setBalance(BSTNODE * node)
     {
         avlval->height = avlval->heightLeft + 1;
     }
+}
+BSTNODE * sibling(BSTNODE * in)
+{
+    BSTNODE * parent = getBSTNODEparent(in);
+    if(getBSTNODEleft(parent) == in)
+        return getBSTNODEright(parent);
+    else if(getBSTNODEright(parent) == in)
+        return getBSTNODEleft(parent);
+    return NULL;
+}
+void rotate(BSTNODE * a, BSTNODE *b)
+{
 }
